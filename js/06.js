@@ -14,3 +14,16 @@ app.controller("MyController", ["$scope", "$parse", function ($scope, $parse) {
         }
     })
 }])
+
+app.controller("secondController", ["$scope", "$interpolate", function ($scope, $interpolate) {
+    //设置监听
+    $scope.$watch("emailBody", function (body) {
+        console.log(body);
+        if (body) {
+            var template = $interpolate(body);
+            $scope.previewText = template({
+                to: $scope.to
+            });
+        }
+    })
+}])
