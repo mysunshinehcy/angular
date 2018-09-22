@@ -31,5 +31,28 @@
     <a href="http://google.com">Click me to go to Google</a>
 
     /**
-     * <a>标签
+     * <a>标签定义了一个从当前页面到本站或者站外另一个页面之间的链接，href属性定义了链接的目标。
      */
+
+     //而下面这个按钮元素则与此非常不同
+<button href="http://google.com" type="submit">Click me</button>
+/**
+ * 默认情况下超链接标签是蓝色且有下划线的，而按钮标签在浏览器中看起来是一个可点击的按钮。超链接标签知道当自己的href
+ * 属性被设置为http://google.com之后，如果用户点击这个超链接，它应该修改地址栏的URL并加载Google的首页。
+ * 
+ * 而按钮标签知道当自己的href属性被设置为http://google.com之后，如果用户点击这个超链接，它应该修改地址栏的URL属性
+ * 并加载Google的首页。
+ * 
+ * 而按钮标签则完全忽略href属性，并不会在被点击时有同样的行为。
+ * 
+ * 因此，修改地址栏的URL并将你带到一个新的页面是超链接的预置行为，而不是按钮的预置行为。
+ * 
+ * 最后，两个标签在设置title属性时则有相同的行为:当用户将鼠标悬停在元素上时会出现一个提示框。
+ */
+
+ <a href="http://google.com" title="click me">Click me to go to Google</a>
+ <button type="submit" title="click me">Click me</button>
+
+ /**
+  * 总的来说，浏览器会渲染HTML元素的样式和行为，这个能力是Web强大的功能的基础之一。
+  */
