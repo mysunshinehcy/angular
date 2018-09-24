@@ -56,3 +56,44 @@
  /**
   * 总的来说，浏览器会渲染HTML元素的样式和行为，这个能力是Web强大的功能的基础之一。
   */
+
+  /**
+   * 假设我们已经创建了一个完整的HTML文档，其中包含了AngularJS,并且DOM中已经用ng-app指令标识出了
+   * 应用的根元素，当AngularJS编译HTML时就会调用指定。
+   * 
+   * 调用指令意味着执行指令背后与之相关联的JavaScript代码，这些代码是我们用指定定义写出来的。
+   */
+
+
+   <my-directive></my-directive>
+   angular.module("myApp",[]).directive("myDirective",function(){
+       return {
+           restrict:'E',
+           template:'<a href="http://google.com">Click me to go to Google</a>',
+       }
+   })
+
+   /**
+    * 通过AngularJS模块API中的.directive()方法，我们可以通过传入一个一个字符串和一个函数来注册一个新指令。
+    * 其中字符串是这个指令的名字，指令名应该是驼峰命名风格的，函数应该返回一个对象
+    */
+
+    /**
+     * 驼峰命名风格用来将一个短语写在一个单词中，除了第一个单词外其他单词首字母大写，中间不加空格。
+     * 例如,bumpy,roads用驼峰风格来写应该是bumpyRoads。
+     */
+
+     /**
+      * 默认情况下，Angular将模板生成的HTML代码嵌套在自定义标签<my-directive>内部。
+      * 
+      * 下面向指令定义中添加一些新的设置:我们可以将自定义标签从生成的DOM中完全移除掉，并只留下由模板生成的链接。
+      * 将replace设置为true就可以实现这个效果
+      */
+
+      angular.module("myApp",[]).directive("myDirective",function(){
+          return {
+              restrict:"E",
+              replace:true,
+              template:'<a href="http://google.com">Click me to go to Google</a>'
+          };
+      });

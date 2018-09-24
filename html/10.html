@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../lib/angular.min.js"></script>
+    <script src="../js/10.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/foundation.min.css" />
+</head>
+
+<body>
+    <p>We can access:{{rootProperty}}</p>
+    <div ng-controller="ParentController">
+        <p>We can access:{{rootProperty}} and {{parentProperty}}</p>
+        <p> can't access {{childProperty}}</p>
+        <div ng-controller="ChildController">
+            <p>
+                We can access:
+                {{rootProperty}} and 
+                {{parentProperty}} and
+                {{childProperty}}
+            </p>
+            <p>{{fullSentenceFromChild}}</p>
+        </div>
+    </div>
+</body>
+
+</html>
