@@ -1,12 +1,16 @@
 <!DOCTYPE html>
-<html lang="en" ng-app>
+<html lang="en" ng-app="myApp">
 <head>
     <meta charset="UTF-8">
     <title>Simple App</title>
     <script src="../lib/angular.min.js"></script>
+    <script src="../js/01.js"></script>
 </head>
 <body>
-    <input type="text" ng-model="name" placeholder="Your name">
-    <h1>Hello {{name}}</h1>
+    <!-- <input type="text" ng-model="name" placeholder="Your name">
+    <h1>Hello {{name}}</h1> -->
+    <div my-directive my-url="http://google/com" my-link-text="Click me to go to Google">
+
+    </div>
 </body>
 </html>
