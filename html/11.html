@@ -15,6 +15,34 @@
     <input type="text" ng-model="someProperty" placeholder="TypetoEnable">
     <button ng-model="button" ng-disabled="!someProperty">AButton</button>
     <textarea ng-disabled="isDisabled">Wait5seconds</textarea>
+
+    Type here to make sibling readonly:
+    <input type="text" ng-model="someProperty"/><br/>
+    <input type="text" ng-readonly="someProperty" value="Some text here"/>
+
+    <label>someProperty={{someProperty}}</label>
+    <input type="checkbox" ng-checked="someProperty" ng-init="someProperty=true" ng-model="someProperty"/>
+
+    <!--相反的例子-->
+    <label>someProperty={{anotherProperty}}}</label>
+    <input type="checkbox" ng-checked="anotherProperty" ng-init="anotherProperty=false" ng-model="anotherProperty"/>
+
+    <label>Select Two Fish:</label>
+    <input type="checkbox" ng-model="isTwoFish"/><br/>
+    <select>
+        <option>One Fish</option>
+        <option ng-selected="isTwoFish">Two Fish</option>
+    </select>
+
+    <!--当href包含一个{{expression}}时总是使用ng-href-->
+    <a ng-href="{{myHref}}">I'm feeling lucky,when i load</a>
+    <!--用户单机之前，href不会加载-->
+    <a href="{{myHref}}">I'm feeling 404</a>
+
+    <h1></h1>
+    <img src="{{imgSrc}}">
+    <h1>Rightway</h1>
+    <img ng-src="{{imgSrc}}"/>
 </body>
 
 </html>
