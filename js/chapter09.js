@@ -97,3 +97,63 @@
               template:'<a href="http://google.com">Click me to go to Google</a>'
           };
       });
+
+      /**
+       * Angular允许创建新的子作用域或者隔离作用域
+       * 
+       * 同之前在当前作用域中介绍的继承作用域(子作用域)不同，隔离作用域同当前DOM的作用域是完全分隔
+       * 开的。为了给这个新的对象设置属性，我们需要显式地通过属性传递数据，同在JavaScript或Ruby中给方法传递参数类似。
+       */
+      /**当用如下代码将指令的作用域设置成一个只包含它自己的属性的干净对象时:
+       * scope:{
+       *    someProperty:'need to be set'
+       * }
+       * 
+       * 实际上创造的是隔离作用域。本质上，意味着指令有了一个属于自己的$scope对象，这个对象只能在指令的方法中或指令的模板字符串中使用
+       * 实际上不能像上面的例子那样，在作用域对象内部直接设置someProperty属性
+       * scope:{
+       *    //这样行不通
+       *    someProperty:'need to be set'
+       * }
+       * 
+       * 实际上要在DOM中像之前提到过那样，像给函数传递函数一样，通过属性来设置值
+       * 
+       * <div my-directive some-property="someProperty with @binding"></div>
+       * 
+       * 现在，我们在作用域对象内部把someProperty值设置为@这个绑定策略。这个绑定策略告诉
+       * Angular将DOM中some-property属性的值复制给新作用域对象中的someProperty属性
+       * 
+       * scope:{
+       *     someProperty:'@'
+       * }
+       * 
+       * 注意，默认情况下someProperty在DOM中的映射是some-property属性。如果我们想显式指定绑定的的
+       * 属性名，可以用如下方式:
+       * 
+       * scope:{
+       *    someProperty:'@someAttr'
+       * }
+       * 
+       * 在这个例子中，被绑定的属性名是some-attr而不是some-property.
+       * <div my-directive some-attr="someProperty with @binding"></div>
+       * 
+       * 默认情况下约定DOM属性和JavaScript对象属性的名字是一样的(除非对象的属性名采用的是驼峰式写法)。
+       * 
+       * 由于作用域中属性经常是私有的，因此可以(虽然不常见)指定我们希望将这个内部属性同哪个DOM属性进行绑定:
+       * 
+       * scope:{
+       *    myUrl:'@someAttr',
+       *    myLinkText:'@'
+       * }
+       * 
+       * 上面的隔离作用域中的内容是:将指令的私有属性$scope.myUrl同DOM中some-attr属性的值绑定起来。
+       * 这个值既可以是硬编码的也可以是当前作用域(例如Some-attr="{{expression}}")中某个表达式的运算结果。
+       * 
+       * 在DOM中要用some-attr代替my-url
+       * 
+       * <div my-directive some-attr="http://google.com" my-link-text="Click me to go to Google"></div>
+       * 
+       * 更进一步，还可以在DOM对应的作用域上运算表达式，并将结果传递给指令，在指令内部最终被绑定到属性上
+       * 
+       * <div my-directive some-attr="{{'http://'+'google.com'}}"></div>
+       * */      
