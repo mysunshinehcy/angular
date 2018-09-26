@@ -15,14 +15,14 @@
     <input type="text" ng-model="someProperty" placeholder="TypetoEnable">
     <button ng-model="button" ng-disabled="!someProperty">AButton</button>
     <textarea ng-disabled="isDisabled">Wait5seconds</textarea>
-
+    <hr/>
     Type here to make sibling readonly:
     <input type="text" ng-model="someProperty"/><br/>
     <input type="text" ng-readonly="someProperty" value="Some text here"/>
-
+    <hr/>
     <label>someProperty={{someProperty}}</label>
     <input type="checkbox" ng-checked="someProperty" ng-init="someProperty=true" ng-model="someProperty"/>
-
+    <hr/>
     <!--相反的例子-->
     <label>someProperty={{anotherProperty}}}</label>
     <input type="checkbox" ng-checked="anotherProperty" ng-init="anotherProperty=false" ng-model="anotherProperty"/>
@@ -33,19 +33,64 @@
         <option>One Fish</option>
         <option ng-selected="isTwoFish">Two Fish</option>
     </select>
-
+    <hr/>
     <!--当href包含一个{{expression}}时总是使用ng-href-->
     <a ng-href="{{myHref}}">I'm feeling lucky,when i load</a>
     <!--用户单机之前，href不会加载-->
     <a href="{{myHref}}">I'm feeling 404</a>
-
+    <hr/>
     <h1></h1>
     <img src="{{imgSrc}}">
     <h1>Rightway</h1>
     <img ng-src="{{imgSrc}}"/>
 
     {{appProperty}}
-    <button ng-click="someAction()"></button>
+    <button ng-click="someAction()">button</button>
+
+    <!--利用控制器修改下47-48行的代码，把数据和操作放到子作用域中-->
+    <hr/>
+    <div ng-controller="SomeController">
+        {{someModel.someProperty}}
+        <button ng-click="someAction()">Communicate</button>
+    </div>
+    <div ng-controller="ParentController">
+        {{someBareValue}}
+        <button ng-click="someAction()">Communicate to child</button>
+        <div ng-controller="ChildController">
+             {{someBareValue}}
+             <button ng-click="childAction()">Communicate to Parent</button>
+        </div>
+    </div>
+
+    <!--可以看下这个例子的实际效果，首先点击child button,然后点击parentbutton。这个例子充分说明了子控制器是复制而非引用someBareValue.-->
+    <hr/>
+    <div ng-controller="anyParentController">
+        {{someModel.someValue}}
+        <button ng-click="someAction()">Communicate to child</button>
+        <div ng-controller="anyChildController">
+            {{someModel.someValue}}
+            <button ng-click="childAction()">Communicate to Parent</button>
+        </div>
+    </div>
+    <hr/>
+    <!--<div ng-include="'/myTemplateName.html'" ng-controller="MyController" ng-init="name='World'">
+        Hello {{name}}
+    </div> -->
+    <hr/>
+    <!--在下面的例子中，当person.name是Ari时，文本域下面的div会显示出来，并且这个人会获得胜利-->
+    <input type="text" ng-model="person.name"/>
+    <div ng-switch on="person.name">
+        <p ng-switch-default>And the winner is</p>
+        <h1 ng-switch-when="Ari">{{person.name}}</h1>
+    </div>
+
+    <hr/>
+    <div ng-if="2+2===5">
+        Won't see this DOM node,not even in the source code.
+    </div>
+    <div ng-if="2+2===4">
+        Hi,I do exit.
+    </div>
 </body>
 
 </html>
