@@ -44,3 +44,15 @@
      * ng-src:
      * Angular会告诉浏览器在ng-src对应的表达式生效之前不要加载图像
      */
+
+     /**
+      * ng-app和ng-controller是特殊的指令，因此它们会修改它们内部的指令的作用域
+      * 
+      * ng-app为AngularJS应用创建$rootScope,ng-controller则会以$rootScope或另外一个ng-controller
+      * 的作用域为原型创建新的子作用域。
+      * 
+      * 1.ng-app:
+      * 任何具有ng-app属性的DOM元素将被标记为$rootScope的起始点。
+      * $rootScope是作用域链的起始点，任何嵌套在ng-app内的指令都会继承它。
+      * 在JavaScript代码中通过run方法来访问$rootScope.
+      */
