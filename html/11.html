@@ -9,6 +9,7 @@
     <script src="../lib/angular.min.js"></script>
     <script src="../js/11.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/foundation.min.css" />
+    <link rel="stylesheet" type="text/css" href="../css/test.css" />
 </head>
 
 <body>
@@ -91,6 +92,12 @@
     <div ng-if="2+2===4">
         Hi,I do exit.
     </div>
+    <hr/>
+    <ul ng-controller="peopleController">
+        <li ng-repeat="person in people" ng-class="{even:!$even,odd:!$odd}">
+            {{person.name}} lives in {{person.city}}
+        </li>
+    </ul>
 </body>
 
 </html>

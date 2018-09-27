@@ -55,4 +55,12 @@ angular.module('myApp', []).run(function ($rootScope, $timeout) {
     }
 }).controller('MyController', function ($scope) {
     //没有了
+}).controller("peopleController", function ($scope) {
+    $scope.people = [{
+        name: 'Ari',
+        city: 'San Francisco'
+    }, {
+        name: 'Erik',
+        city: 'Seattle'
+    }]
 })
