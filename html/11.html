@@ -16,20 +16,19 @@
     <input type="text" ng-model="someProperty" placeholder="TypetoEnable">
     <button ng-model="button" ng-disabled="!someProperty">AButton</button>
     <textarea ng-disabled="isDisabled">Wait5seconds</textarea>
-    <hr/>
-    Type here to make sibling readonly:
-    <input type="text" ng-model="someProperty"/><br/>
-    <input type="text" ng-readonly="someProperty" value="Some text here"/>
+    <hr/> Type here to make sibling readonly:
+    <input type="text" ng-model="someProperty" /><br/>
+    <input type="text" ng-readonly="someProperty" value="Some text here" />
     <hr/>
     <label>someProperty={{someProperty}}</label>
-    <input type="checkbox" ng-checked="someProperty" ng-init="someProperty=true" ng-model="someProperty"/>
+    <input type="checkbox" ng-checked="someProperty" ng-init="someProperty=true" ng-model="someProperty" />
     <hr/>
     <!--相反的例子-->
     <label>someProperty={{anotherProperty}}}</label>
-    <input type="checkbox" ng-checked="anotherProperty" ng-init="anotherProperty=false" ng-model="anotherProperty"/>
+    <input type="checkbox" ng-checked="anotherProperty" ng-init="anotherProperty=false" ng-model="anotherProperty" />
 
     <label>Select Two Fish:</label>
-    <input type="checkbox" ng-model="isTwoFish"/><br/>
+    <input type="checkbox" ng-model="isTwoFish" /><br/>
     <select>
         <option>One Fish</option>
         <option ng-selected="isTwoFish">Two Fish</option>
@@ -43,9 +42,7 @@
     <h1></h1>
     <img src="{{imgSrc}}">
     <h1>Rightway</h1>
-    <img ng-src="{{imgSrc}}"/>
-
-    {{appProperty}}
+    <img ng-src="{{imgSrc}}" /> {{appProperty}}
     <button ng-click="someAction()">button</button>
 
     <!--利用控制器修改下47-48行的代码，把数据和操作放到子作用域中-->
@@ -58,8 +55,8 @@
         {{someBareValue}}
         <button ng-click="someAction()">Communicate to child</button>
         <div ng-controller="ChildController">
-             {{someBareValue}}
-             <button ng-click="childAction()">Communicate to Parent</button>
+            {{someBareValue}}
+            <button ng-click="childAction()">Communicate to Parent</button>
         </div>
     </div>
 
@@ -79,7 +76,7 @@
     </div> -->
     <hr/>
     <!--在下面的例子中，当person.name是Ari时，文本域下面的div会显示出来，并且这个人会获得胜利-->
-    <input type="text" ng-model="person.name"/>
+    <input type="text" ng-model="person.name" />
     <div ng-switch on="person.name">
         <p ng-switch-default>And the winner is</p>
         <h1 ng-switch-when="Ari">{{person.name}}</h1>
@@ -98,6 +95,38 @@
             {{person.name}} lives in {{person.city}}
         </li>
     </ul>
+    <hr/>
+    <div ng-init="greeting='hello';person='World'">
+        {{greeting}}{{person}}
+    </div>
+    <hr/>
+    <div ng-init="greeting='HelloWorld'">
+        <p ng-bind="greeting"></p>
+    </div>
+
+    <hr/>
+    <div ng-show="2 + 2 == 5">
+        2 + 2 isn't 5, don't show
+    </div>
+    <div ng-show="2 + 2 == 4">
+        2 + 2 is 4, do show
+    </div>
+    <div ng-hide="2 + 2 == 5">
+        2 + 2 isn't 5, don't hide
+    </div>
+    <div ng-hide="2 + 2 == 4">
+        2 + 2 is 4, do hide
+    </div>
+    <hr/>
+    <div ng-controller="EquationController">
+        <input type="text" ng-model="equation.x" ng-change="change()"/>
+        <code>{{ equation.output }}</code>
+    </div>
+
+    <hr/>
+    <form name="signup_form" ng-controller="FormController" ng-submit="submitForm()" novalidate>
+
+    </form>
 </body>
 
 </html>
