@@ -63,4 +63,9 @@ angular.module('myApp', []).run(function ($rootScope, $timeout) {
         name: 'Erik',
         city: 'Seattle'
     }]
+}).controller("EquationController", function ($scope) {
+    $scope.equation = {};
+    $scope.change = function () {
+        $scope.equation.output = parseInt($scope.equation.x) + 2;
+    }
 })
