@@ -126,13 +126,45 @@
     <hr />
     <form name="signup_form" ng-controller="FormController" ng-submit="submitForm()" novalidate>
         <div ng-repeat="field in fields" ng-form="signup_form_input">
-            <input type="text" name="dynamic_input" ng-required="field.isRequired" ng-model="field.name" placeholder="{{field.placeholder}}" />
+            <input type="text" name="dynamic_input" ng-required="field.isRequired" ng-model="field.name" placeholder="{{field.placeholder}}"
+            />
             <div ng-show="signup_form_input.dynamic_input.$dirty&&signup_form_input.dynamic_input.$invalid">
                 <span class="error" ng-show="signup_form_input.dynamic_input.$error.required">The field is required.</span>
             </div>
         </div>
         <button type="submit" ng-disabled="signup_form.$invalid">Submit All</button>
     </form>
+    <hr/>
+    <div ng-controller="CountController">
+        <button ng-click="count=count+1" ng-init="count=0">Increment</button> count:{{count}}
+        <button ng-click="decrement()">decrement</button>
+    </div>
+    <div ng-controller="CityController">
+        <select ng-model="city" ng-options="city.name for city in cities">
+            <option value="">Choose City</option>
+        </select> 
+        Best City: {{ city.name }}
+    </div>
+    <hr/>
+    <form ng-submit="submit()" ng-controller="submitController">
+        Enter text and hit enter:
+        <input type="text" ng-model="person.name" name="person.name"/>
+        <input type="submit" ng-model="person.name" value="Submit"/>
+        <code>people={{people}}</code>
+        <ul ng-repeat="(index,object) in people">
+            <li>{{object.name}}</li>
+        </ul>
+    </form>
+    <hr/>
+    <div ng-controller="LotteryController">
+        <div ng-class="{red:x>5}" ng-if="x>5">
+            You won!
+        </div>
+        <button ng-click="x=generateNumber()" ng-init="x = 0">>
+            Draw Number
+        </button>
+        <p>Number is:{{x}}</p>
+    </div>
 </body>
 
 </html>
