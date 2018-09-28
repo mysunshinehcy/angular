@@ -68,4 +68,18 @@ angular.module('myApp', []).run(function ($rootScope, $timeout) {
     $scope.change = function () {
         $scope.equation.output = parseInt($scope.equation.x) + 2;
     }
+}).controller("FormController", function ($scope) {
+    $scope.fields = [{
+        placeholder: 'Username',
+        isRequired: true
+    }, {
+        placeholder: 'Password',
+        isRequired: true
+    }, {
+        placeholder: 'Email(optional)',
+        isRequired: false
+    }];
+    $scope.submitForm = function () {
+        alert("it works!");
+    }
 })
