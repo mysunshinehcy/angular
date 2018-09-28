@@ -82,4 +82,29 @@ angular.module('myApp', []).run(function ($rootScope, $timeout) {
     $scope.submitForm = function () {
         alert("it works!");
     }
+}).controller("CountController", function ($scope) {
+    $scope.decrement = function () {
+        $scope.count = $scope.count - 1;
+    }
+}).controller("CityController", function ($scope) {
+    $scope.cities = [{ name: 'Seattle' },
+    { name: 'San Francisco' },
+    { name: 'Chicago' },
+    { name: 'New York' },
+    { name: 'Boston' }]
+}).controller("submitController", function ($scope) {
+    $scope.person = {
+        name: null
+    };
+    $scope.people = [];
+    $scope.submit = function () {
+        if ($scope.person.name) {
+            $scope.people.push({ name: $scope.person.name });
+            $scope.person.name = '';
+        }
+    };
+}).controller("LotteryController", function ($scope) {
+    $scope.generateNumber = function () {
+        return Math.floor((Math.random() * 10) + 1);
+    }
 })
