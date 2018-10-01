@@ -69,3 +69,4 @@ Angular.module("myApp",[]).directive("myDirective",function($timeout,UserDefined
 });
  //指令调用后的结果将是：
  <div>some stuff here<div>
+    
