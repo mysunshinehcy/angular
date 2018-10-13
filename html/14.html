@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../lib/angular.min.js"></script>
+    <script src="../js/14.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/foundation.min.css" />
+</head>
+
+<body>
+
+    <div ng-init="someProperty = 'some data'"></div>
+    <div ng-init="siblingProperty = 'more data'">
+        Inside Div Two: {{ aThirdProperty }}
+        <div ng-init="aThirdProperty = 'data for 3rd property'" ng-controller="SomeCtrl">
+            Inside Div Three: {{ aThirdProperty }}
+            aaa:{{ myProperty }}
+            <div ng-controller="SecondCtrl">
+                Inside Div Four: {{ aThirdProperty }}
+                <br>
+                Outside myDirective: {{ myProperty }}
+                <div my-directive ng-init="myProperty = 'wow, this is cool'">
+                    Inside myDirective: {{ myProperty }}
+                </div>
+            </div>
+         </div>
+    </div>
+</body>
+
+</html>
