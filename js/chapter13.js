@@ -37,3 +37,30 @@ angular.module("myApp", []).config(function ($provide, $compileProvider) {
         }
     })
 })
+
+/**
+ * 需要特别注意，AngularJS会以这些函数书写和注册的顺序来执行它们。也就是说我们无法注册一个尚未注册的提供者。
+ * 
+ * 唯一的例外是constant()方法，这个方法总会在所有配置块之前被执行。
+ * 
+ * 当对模块进行配置时，需要格外注意只有少数几种类型的对象可以被注入到config()函数中:提供者和常量。
+ * 如果我们将一个服务注入进去，会在真正对其进行配置之前就以外地把服务实例化了。
+ * 
+ * 这种对配置服务进行严格限制的另外一个副作用就是，我们只能注入用provider()语法构建的服务，其他的则不行。
+ * 
+ * 这些config()代码块可以对我们的服务进行自定义配置，例如设置API密钥或自定义URL等。
+ * 
+ * 也可以定义多个配置块，它们会按照顺序执行，这样就可以将应用不同阶段的配置代码集中在不同的代码块中。
+ * 
+ * config()函数接受一个参数。
+ * configFunction（函数）：AngularJS在模块加载时会执行这个函数。
+ */
+
+angular.module("myApp", []).config(function ($routeProvider) {
+    $routeProvider.when('/', {
+        controller: 'WelcomeController',
+        template: 'views/welcome.html'
+    });
+}).config(function (ConnectProvider) {
+    ConnectProvider.setApiKey('SOME_API_KEY');
+});
