@@ -64,3 +64,27 @@ angular.module("myApp", []).config(function ($routeProvider) {
 }).config(function (ConnectProvider) {
     ConnectProvider.setApiKey('SOME_API_KEY');
 });
+
+/**
+ * 和配置块不同，运行块在注入器创建之后被执行，它是所有AngularJS应用中第一个被执行的方法。
+ * 运行块是AngularJS中与main方法最接近的概念。运行块中的代码通常是很难进行单元测试，它是和应用本身高度耦合的。
+ * 运行块通常用来注册全局的事件监听器。例如，我们会在.run()块中设置路由事件的监听器以及过滤未经授权的1请求。
+ * 假设我们需要在每次路由发生变化时，都执行一个函数来验证用户的权限，放置这个功能唯一合理的地方就是run方法。
+ */
+
+/**
+ * run()函数接受个参数。
+ * initialzeFn(函数)AngularJS在注入器创建后会执行这个函数。
+ */
+angular.module("myApp", []).run(function ($rootScope, AuthService) {
+    $rootScope.$on('$routeChangeStart', function (evt, next, current) {
+        //如果用户未登陆
+        if (!AuthService.userLoggedIn()) {
+            if (next.templateUrl === 'login.html') {
+                //已经转向登陆路由因此无需重定向
+            } else {
+                $location.path('/login');
+            }
+        }
+    })
+})
