@@ -70,3 +70,26 @@ angular.module('myApp', []).config(['$routeProvider', function ($routeProvider) 
             redirectTo: '/'
         })
 }]);
+
+/**
+ * 1.controller
+ * controller:'MyController'或者
+ * controller:function($scope){}
+ * 如果配置对象中设置了controller属性，那么这个指定的控制器会与路由所创建的新作用
+ * 域关联在一起。如果参数值是字符型，会在模块中所有注册过的控制器中查找对应的内容，然后
+ * 与路由关联在一起。如果参数值是函数型，这个函数会作为模板中DOM元素的控制器并与模板
+ * 进行关联。
+ * 
+ * 2.template
+ * template: '<div><h2>Route</h2></div>'
+ * AngularJS会将配置对象中的HTML模板渲染到对应的具有ng-view指令的DOM元素中。
+ * 
+ * 3. templateUrl
+ * templateUrl: 'views/template_name.html'
+ * 应用会根据templateUrl属性所指定的路径通过XHR读取视图（或者从$templateCache中读
+ * 取）。如果能够找到并读取这个模板，AngularJS会将模板的内容渲染到具有ng-view指令的DOM
+ * 元素中。
+ * 
+ * 4.resolve
+ * 
+ */
