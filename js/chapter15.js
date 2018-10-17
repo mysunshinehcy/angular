@@ -67,3 +67,57 @@ controller('MyController', { $scope: newScope });
  * 由于需要处理的是一个字符串组成的列表，行内注入声明也可以在压缩后的代码中正常运
  * 行。通常通过括号和声明数组的[]符号来使用它。
  */
+
+ /**
+  * $injector API
+  * 1.annotate()
+  * annotate()方法的返回值是一个由服务名称组成的数组，这些服务会在实例化时被注入到
+  * 目前函数中。annotate()方法可以帮助$injector判断哪些服务会在函数被调用时注入进去。
+  * annotate()方法可以接受一个参数:fn(函数或数组)annotate()方法返回一个数组，数组元素的
+  * 值是在调用时被注入到目标函数中的服务的名称。
+  * 
+  * var injector=angular.injector(['ng','myApp']);
+  * injector.annotate(function($q,greeter){});
+  * //['$q','greeter']
+  * 
+  * 2.get():get()方法返回一个服务的实例，可以接受一个参数:
+  * name(字符串):参数name是想要获取的实例名称。get()根据名称返回服务的一个实例。
+  * var injector=angular.injector(['ng','myApp']);
+  * injector.get("greeter");//return service greeter
+  * 
+  * 3.has():has()方法返回一个布尔值，在$injector能够从自己的注册列表中找到对应的服务时返回true，
+  * 否则返回false。它能接受一个参数:
+  * name(字符串):参数name是我们想在注入器的注册列表中查询的服务名称。
+  * var injector=angular.injector(['ng','myApp']);
+  * injector.get("greeter");=>true
+  * 
+  * 4.instantiate():
+  * instantiate()方法可以创建某个JavaScript类型的实例。它会通过new操作符调用构造函数，并将所有参数都传递给构造函数。
+  * 它接受两个参数。
+  * 
+  * Type(函数):构造函数
+  * locals(对象,可选):这是一个可选的参数，提供了另一种传递参数的方式
+  * instantiate()方法返回Type的一个新实例。
+  * 
+  * 5.invoke():invoke方法会调用方法并从$injector中添加方法参数。
+  * invoke()方法接受三个参数：
+  * fn(function):这个函数就是要调用的函数。这个函数的参数是由函数声明设置。
+  * self(object-可选):self参数允许我们设置调用方法的this参数。
+  * locals(object-可选):这个可选参数提供另一种方式在函数被调用时传递参数名给该函数。
+  * invoke()方法返回fn函数返回的值。
+  */
+
+//  上面介绍了三种声明依赖注入的方式，可以在定义函数时选择任意一种合适的方式。但在实
+//  际生产过程中，当代码体积变得非常庞大时，写代码还要关心参数顺序将是一个耗费心力的工作。
+//  通过使用ngMin这个工具，能够减少我们定义依赖关系所需的工作量。ngMin是一个为
+//  AngularJS应用设计的预压缩工具，它会遍历整个AngularJS应用并帮助我们设置好依赖注入。
+//  例如，它会将如下代码：
+//  angular.module('myApp', [])
+//  .directive('myDirective', function($http) { })
+//  .controller('IndexController', function($scope, $q) {
+//  });
+//  转换成下面的形式：
+//  angular.module('myApp', [])
+//  .directive('myDirective', ['$http', function ($http) { }])
+//  .controller('IndexController', [ '$scope', '$q',function ($scope, $q) {} ]);
+//  ngMin可以显著减少代码输入的工作量，并保持源文件的整洁。
