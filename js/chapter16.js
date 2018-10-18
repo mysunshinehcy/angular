@@ -81,8 +81,8 @@ angular.module('myApp.services', []).factory('githubService', function ($http) {
     //返回一个带有events函数的服务对象
     //this is my test:https://api.github.com/users/study0918/events?callback=JSON_CALLBACK
     return {
-        events:function(username){
-            return runUserRequest(username,'events');
+        events: function (username) {
+            return runUserRequest(username, 'events');
         }
     }
 })
