@@ -86,3 +86,172 @@ angular.module('myApp.services', []).factory('githubService', function ($http) {
         }
     }
 })
+
+/**
+ * 在AngularJS应用中，factory()方法是用来注册服务的最常规方式，同时还有其他一些API可以在特定情况下帮助我们减少代码量。
+ * 1)factory()
+ * 2)service()
+ * 3)constant()
+ * 4)value()
+ * 5)provider()
+ */
+
+/**
+ * factory():
+ * 如前所见，factory()方法是创建和配置服务的最快捷方式。factory()函数可以接受两个参数
+ * 1)name(字符串):需要注册的服务名
+ * 2)getFn(函数):这个函数会在AngularJS创建服务实例时被调用
+ * 因为服务是单例对象，getFn()在应用的生命周期内只会被调用一次。同其他AngularJS的服务一样，在定义服务时，getFn可以接受一个包含可被注入对象的数组或函数
+ * getFn函数可以返回简单类型、函数乃至对象等任意类型的数据(同value()函数类似)。
+ */
+
+angular.module('myApp').factory('myService', function () {
+    return {
+        'username': 'auser'
+    };
+});
+
+angular.module('myApp').factory('githubService', ['$http', function ($http) {
+    return {
+        getUserEvents: function (username) {
+            //write something
+        }
+    }
+}])
+
+/**
+ * service():
+ * 使用service()可以注册一个支持构造函数的服务，它允许我们为服务对象注册一个构造函数。
+ * service()方法接受两个参数。
+ * name(字符串)
+ * 要注册的服务名称。
+ * constructor(函数)
+ * 构造函数，我们调用它来实例化服务对象。
+ * service()函数会在创建实例时通过new关键字来实例化服务对象。
+ */
+
+var Person = function ($http) {
+    this.getName = function () {
+        return $http({
+            method: 'GET',
+            url: '/api/user'
+        });
+    };
+}
+
+angular.service('personService', Person);
+
+/**
+ * provider()
+ * 所有服务工厂都是由$provider服务创建的,$provide服务负责在运行时初始化这些提供者。
+ * 提供这是一个具有$get()方法的对象，$injector通过调用$get方法创建服务实例。$provider
+ * 提供了数个不同的API用于创建服务，每个方法都有各自的特殊用途。
+ * 
+ * 所有创建服务的方法都构建在provider方法之上。provider()方法负责在$providerCache中注册服务。
+ * 
+ * 从技术上说，当我们假定传入的函数就是$get()时，factory()函数就是用provider()方法注册服务的简略形式。
+ */
+
+/**下面两种方法的作用完全一样，并且会创建同一个服务。 */
+angular.module('myApp', []).factory('myService', function () {
+    return {
+        'username': 'auser'
+    };
+})
+
+//这与上面工厂的用法等价
+.provider('myService', {
+    $get: function () {
+        return {
+            'username': 'auser'
+        }
+    }
+})
+
+/**是否可以一直使用.factory()方法来代替.provider()呢
+ * 答案取决于是否需要用AngularJS的.config()函数来对.provider()方法来返回的服务进行额外的扩展配置。
+ * 同其他创建服务的方法不同，config()方法可以被注入特殊的参数。
+ * 
+ * 比如我们希望在应用启动前配置githubService的URL
+ */
+
+//使用'.provider'注册该服务
+angular.module('myApp',[]).provider('githubService',function($http){
+    //默认的私有状态
+    var githubUrl='https://github.com'
+    setGithubUrl: function(url){
+        //通过.config改变默认属性
+        if(url){
+            githubUrl=url;
+        }
+    },
+    method:JSONP,//如果需要，可以重写
+    $get:function($http){
+        self=this;
+        return $http(){
+            method: self.method,
+            url: githubUrl + '/events'});
+        }
+    }
+})
+
+/**
+ * 通过使用.provider()方法，可以在多个应用使用同一个服务时获得更强的扩展性，特别是
+ * 在不同应用或开源社区之间共享服务时。
+ * 
+ * 在上面的例子中，provider()方法在文本githubService后添加Provider生成了一个新的提
+ * 供者，githubServiceProvider可以被注入到config()函数中。
+ */
+
+angular.module('myApp',[]).config(function(){
+    githubServiceProvider.setGithubUrl('git@github.com');
+})
+
+/**
+ * 如果希望在config()函数中可以对服务进行配置，必须用provider()来定义服务。
+ * provider()方法为服务注册提供者。可以接受两个参数。
+ * 1)name(字符串):name参数在providerCache中是注册的名字。name+Provider会成为服务的提供者。同时name也是服务实例的名字。
+ * 例如，如果定义了一个githubService，那它的提供者就是githubServiceProvider。
+ * 2)aProvider（对象/函数/数组）
+ * aProvider可以是多种形式。如果aProvider是函数，那么它会通过依赖注入被调用，并且负责通过$get方法返回一个对象。
+ * 如果aProvider是数组，会被当做一个带有行内依赖注入声明的函数来处理。数组的最后一个元素应该是函数，可以返回一个带有$get方法的对象。
+ * 
+ * 如果aProvider是对象，它应该带有$get方法。provider()函数返回一个已经注册的提供者实例。
+ * 
+ */
+
+/**直接使用provider() API是最原始的创建服务的方法： */
+//在模块对象上直接创建provider的例子
+angular.module('myApp',[]).provider('UserService',{
+    favoriteColor:null,
+    setFavoriteColor:function(newColor){
+        this.favoriteColor=newColor;
+    },
+    //$get函数可以接受injectables
+    $get:function($http){
+        return {
+            'name':'Ari',
+            getFavoriteColor:function(){
+                return this.favoriteColor||'unknown';
+            }
+        }
+    }
+})
+
+/**
+ * 用这个方法创建服务，必须返回一个定义有$get()函数的对象，否则会导致错误。
+ */
+
+//Get the injector
+var injector=angular.injector(['myApp']);
+injector.invoke(['UserService',function(UserService){
+    //UserService returns
+    // {
+    //     'name':'Ari',
+    //     getFavoriteColor:function(){
+
+    //     }
+    // }
+}])
+
+//.provider()是非常强大的，可以让我们在不同的应用中共享服务。
