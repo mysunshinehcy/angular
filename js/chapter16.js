@@ -287,3 +287,61 @@ angular.module('myApp').controller('MyController',function($scope,apikey){
  * value()方法返回以name参数的值为名称的注册后的服务实例
  */
 angular.module('myApp').value('apiKey','123123123');
+
+/**
+ * 何时使用value()和constant()
+ * value()方法和constant()方法之间最主要的区别是，常量可以注入到配置函数中，而值不行。
+ * 通常情况下，可以通过value()来注册服务对象或函数,用constant()来配置数据。
+ */
+
+ angular.module('myApp',[])
+ .constant('apikey','123123123')
+ .config(function(apikey){
+     //在这里apikey将被赋值为123123123
+     //就像上面设置的那样
+ })
+ .value('FBid','231231231')
+ .config(function(FBid){
+     //这里抛出一个错误，未知的provider:FBid
+     //因为在config函数内部无法访问这个值
+ });
+
+ /**
+  * decorator()
+  * $provide服务提供了在服务实例创建时对其进行拦截的功能，可以对服务进行扩展，或者用另外的内容完全代替它。
+  * 装饰器是非常强大的，它不仅可以应用在我们自己的服务上，也可以对AngularJS的核心服务进行拦截，中断
+  * 甚至替换功能的操作。事实上AngularJS中很多功能的测试就是借助$provide.decorator()
+  * 建立的。
+  * 
+  * 对服务进行装饰的场景有很多，比如对服务进行扩展，将外部缓存进localStorage的功能，
+  * 或者对服务进行封装以便在开发中进行调试和跟踪等
+  * 
+  * 例如，我们想给之前定义的githubService服务加入日志功能，可以借助decorator()函数方便地
+  * 实现这个功能，而不需要对原始的服务进行修改。
+  * 
+  * decorator()函数可以接受两个参数。
+  * name(字符串):将要拦截的服务名称。
+  * decoratorFn(函数):在服务实例化时调用该函数，这个函数由injector.invoke调用，可以将服务注入这个函数中
+  * 
+  * $delegate是可以进行装饰的最原始的服务，为了装饰其他服务，需要将其注入进装饰器
+  */
+
+  //下面的代码展示了如何给githubService添加装饰器。从而为每个请求都加上一个时间戳
+  var githubDecorator=function($delegate,$log){
+      var events=function(path){
+          var startedAt=new Date();
+          var events=$delegate.events(path);
+          //事件是一个promise
+          events.finally(function(){
+              $log.info('Fetching events'+"took"+(new Date()-startedAt)+"ms");
+          });
+          return events;
+      }
+      return {
+          events:events
+      };
+  };
+
+  angular.module('myApp').config(function($provide){
+      $provide.decorator('githubService',githubDecorator);
+  });
