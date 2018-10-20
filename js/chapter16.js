@@ -231,7 +231,7 @@ angular.module('myApp',[]).provider('UserService',{
     $get:function($http){
         return {
             'name':'Ari',
-            getFavoriteColor:function(){
+             getFavoriteColor:function(){
                 return this.favoriteColor||'unknown';
             }
         }
@@ -255,3 +255,35 @@ injector.invoke(['UserService',function(UserService){
 }])
 
 //.provider()是非常强大的，可以让我们在不同的应用中共享服务。
+
+/**
+ * constant():
+ * 可以将一个已经存在的变量值注册为服务，并将其注入到应用的其他部分中。例如，假设我们需要给后端服务一个apikey，
+ * 可以用constant()将其当作常量保存下来。
+ * 
+ * constant()函数可以接受两个参数
+ * name(字符串):需要注册的常量的名字
+ * value(常量):需要注册的常量的值(值或者对象)
+ * constant()方法返回一个注册后的服务实例。
+ */
+
+ angular.module('myApp').constant('apikey','123123123')
+
+//这个常量服务可以像其他服务一样被注入到配置函数中
+//这个常量不能被装饰器拦截
+
+angular.module('myApp').controller('MyController',function($scope,apikey){
+    //可以像上面一样用apikey作为常量
+    //123123123作为字符串的值
+    $scope.apikey=apikey;
+})
+
+/**
+ * value():
+ * 如果服务的$get方法返回的是一个常量，那就没必要定义一个包含复杂功能的完整服务，可以通过value()函数方便的注册服务
+ * value方法可以接受两个参数
+ * name(字符串):同样是需要注册的服务名
+ * value(值):将这个值作为可以注入的实例返回。
+ * value()方法返回以name参数的值为名称的注册后的服务实例
+ */
+angular.module('myApp').value('apiKey','123123123');
