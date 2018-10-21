@@ -337,4 +337,64 @@ $scope.$apply(function () {
            $httpProvider.interceptors.push('myInterceptor');
        })
 
-       
+       /**
+        * 设置$httpProvider
+        * 使用.config()可以向所有请求头中添加特定的HTTP头
+        * 
+        * 默认的请求头保存在$httpProvider.defaults.headers.common对象中。默认的头如下所示
+        * Accept:application/json,text/plain,
+        * 
+        * 通过.config()函数可以对这些头进行修改或扩充，如下所示
+        * 
+        * 
+        */
+
+       angular.module('myApp',[]).config(function($httpProvider){
+           $httpProvider.defaults.headers.common['X-Request-By']='MyAngualrApp';
+       });
+
+       /**
+        * 也可以在运行时通过$http对象的defaults属性对这些默认值进行修改。例如，通过如下方法可以动态添加一个头
+        */
+
+        $http.defaults.common['X-Auth']='RandomString'
+
+        /**
+         * 这个功能可以通过使用请求转换器实现，对于单个请求，也可以通过设置$http请求的headers选项实现
+         * 也可以只对POST和PUT类型的请求进行设置。POST请求的默认头如下所示
+         * content-Type:application/json
+         * 
+         * 可以在.config函数中对POST请求的头进行修改或扩充，如下所示
+         * angular.module('myApp',[])
+         * .config(function($httpProvider){
+         *      $httpProvider.defaults.headers.post['X-Posted-By']='MyAngularApp';
+         *  });
+         * 
+         * 也可以对所有的PUT请求做同样的设置。PUT请求的默认头如下所示：
+         * Content-Type: application/json
+         * 可以在.config()函数中对PUT请求的头进行修改或扩充，如下所示：
+         * angular.module('myApp', []) .config(function($httpProvider){
+         *      $httpProvider.defaults.headers.put['X-Posted-By'] = 'MyAngularApp';
+         * })
+         */
+
+/**
+ * 使用$resource
+ * AngularJS还提供另外一个非常有用的可选服务$resource供我们使用。这个服务可以创建一个资源对象，
+ * 我们可以用它非常方便地同支持RESTful的服务端数据源进行交互，当同支持RESTful的数据模型一起工作时，它就派上用场了。
+ * 
+ * REST是Representational State Transfer（表征状态转移）的缩写，是服务器用来智能化地提供数据服务的一种方式。
+ * 
+ * $resource服务难以置信地方便，它对很多复杂的细节进行了抽象，只留下同后端服务器进行真正有意义的交互，前提是服务器支持RESTful的数据模型。
+ * 
+ * $resource服务可以将$http请求转换成save和update等简单形式。我们可以通过$resource服务来处理复杂的细节，而无需自己编写重复和繁琐的业务代码。
+ * 
+ * https://www.bootcdn.cn/angular-resource/
+ * 
+ * 这个模块需要在AngularJS之后进行引用。
+ * <script src="js/vendor/angular.js"></script>
+ * <script src="js/vendor/angular-resource.js"></script>
+ * 最后，需要在我们的应用中将ngResource当作依赖进行引用
+ * angular.module('myApp', ['ngResource']);
+ * 现在可以使用$resource服务了。
+ */
