@@ -398,3 +398,19 @@ $scope.$apply(function () {
  * angular.module('myApp', ['ngResource']);
  * 现在可以使用$resource服务了。
  */
+
+ /**
+  * 应用$resource
+  * $resource服务本身是一个创建资源对象的工厂。返回的$resource对象中包含了同后端服务
+  * 器进行交互的高层API。
+  * var User=$resource('/api/users/:userId.json',{
+  *     userId:'@id'
+  * });
+  * 
+  * $resource返回包含了几个默认动作的资源类对象。可以把User对象理解成同RESTful的后
+  * 端服务进行交互的接口。
+  * 
+  * 资源类对象本身包含的方法可以同后端服务进行简洁的交互。
+  * 默认情况下，这个对象包含了五个常用的方法，可以同资源集合进行交互，或者创建资源对
+  * 象的实例。它会生成两个基于HTTP GET类型的方法，以及三个非GET类型的方法。
+  */
