@@ -231,3 +231,110 @@ $scope.$apply(function () {
     * 5)statusText（字符串）
     * 这个字符串是响应的HTTP状态文本。
     */
+
+    /**
+     * 缓存HTTP请求
+     * 默认情况下，$http服务不会对请求进行本地缓存。在发送单独的请求时，我们可以通过向$http请求传入一个布尔值或者缓存实例来启用缓存。
+     * 
+     */
+
+     $http.get('/api/users.json',{cache:true}).success(function(data){
+         //
+     }).error(function(data){
+        //
+     })
+
+     /**
+      * 第一次发送请求时，$http服务会向/api/user.json发送一个GET请求。第二次发送同一个GET请求时，$http服务会从缓存
+      * 中取回请求的结果，而不会真的发送一个HTTP GET请求。
+      * 
+      * 在这个例子里，由于设置了启用缓存，AngularJS默认会使用$cacheFactory,这个服务是AngularJS在启动时自动创建的。
+      * 
+      * 如果要使用LRU(Least Recenlty Used，最近最少使用)缓存，可以像下面这样传入缓存实例对象:
+      * 
+      */
+
+     var lru=$cacheFactory('lru'{
+         capacity:20
+     });
+
+     //$http请求
+     $http.get('/api/users.json',{cache:lru})
+     .success(function(data){
+
+     }).error(function(data){
+
+     })
+
+     /**
+      * 现在，最新的20个请求会被缓存。第21个请求会导致LRU从缓存中将时间比较老的请求移除掉。
+      * 
+      * 每次发送请求时都传入一个自定义缓存是很麻烦的事情(即使在服务中)。可以通过应用的.config()函数给所有$http请求设置一个默认的缓存
+      */
+
+      angular.module("myApp",[]).config(function($httpProvider,$cacheFactory){
+          $httpProvider.defaults.cache=$cacheFactory('lru',{
+              capacity:20
+          })
+      })
+
+      //现在，所有的请求都会使用我们自定义的LRU缓存了。
+
+      /**
+       * 拦截器
+       * 任何时候我们如果想要为请求添加全局功能，例如身份验证，错误处理等，在请求发送给服务器之前或者从服务器返回时对其进行拦截，是比较好的实现手段。
+       * 
+       * 例如对于身份验证，如果服务器返回401状态码，我们会希望将用户重定向到登录页面。
+       * 
+       * AngularJS通过拦截器提供了一个从全局层面对响应进行处理的途径。
+       * 
+       * 拦截器，实际上是$http服务的基础中间件，用来向应用的业务流程中注入新的逻辑。
+       * 
+       * 拦截器的核心是服务工厂，通过向$httpProvider.interceptors数组中添加服务工厂,在$httpProvider中进行注册。
+       * 
+       * 一个有四种拦截器，两种成功拦截器，两种失败拦截器。
+       * 
+       * 1)request
+       * AngularJS通过$http设置对象来对请求拦截器进行调用。它可以对设置对象进行修改，或者创建一个新的设置对象，它需要返回一个更新过的设置对象，或者一个可以返回新的设置对象的promise
+       * 2)response:
+       * AngularJS通过$http设置对象来响应拦截器进行调用。它可以对响应进行修改，或者创建一个新的响应，它需要返回一个更新过的响应，或者一个可以返回新响应的promisde.
+       * 3)requestError:
+       * AngularJS会在上一个请求拦截器抛出错误，或者promise被reject时调用此拦截器。
+       * 4)responseError:
+       * AngularJS会在上一个响应拦截器抛出错误，或者promisde被reject时调用此拦截器。
+       * 
+       * 调勇模块的.factory()方法来创建拦截器，可以在服务中添加一种或多种拦截器
+       */
+
+       angular.module('myApp',[]).factory('myInterceptor',function($q){
+           var interceptor={
+               'request':function(config){
+                   //成功的请求方法
+                   return config;//或者$q.when(config);
+               },
+               'response':function(response){
+                   //响应成功
+                   return response;//或者$q.when(config);
+               },
+               'requestError':function(rejection){
+                   //请求发生了错误，如果能从错误中恢复，可以返回一个新的请求或promise
+                   return response;//或新的promise
+                   //或者，可以通过返回一个rejection来阻止下一步
+                   //return $q.reject(rejection);
+               },
+               'responseError':function(rejection){
+                   //请求发生了错误，如果能从错误中恢复，可以返回一个新的响应或promise
+                   return rejection;//或新的promise
+                   // 或者，可以通过返回一个rejection来阻止下一步
+                   // return $q.reject(rejection);
+               }
+           };
+           return interceptor;
+       });
+
+       //我们需要使用$httpProvider在.config()函数中注册拦截器
+       angular.module('myApp',[]).config(function($httpProvider){
+           $httpProvider.interceptors.push('myInterceptor');
+       })
+
+       
