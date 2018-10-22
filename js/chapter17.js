@@ -455,3 +455,103 @@ $scope.$apply(function () {
    * });
    * query()和get()方法之间唯一的区别是AngularJS期望query()方法返回数组。
    */
+
+   /**
+    * 3.remove(params,payload,successFn,errorFn)
+    * remove方法和delete()方法的作用是完全相同的，它存在的意义是因为delete是JavaScript的
+    * 保留字，在IE浏览器中会导致额外的问题
+    * //发起一个请求:
+    * //DELETE /api/users
+    * User.remove({},{
+    *    id:'123'
+    * },function(response){
+    *    //处理成功的删除响应
+    * },function(response){
+    *    //处理非成功的删除响应
+    * })
+    */
+
+ /**
+  * $resource实例
+  * 上述方法返回数据时，响应会被一个原型类所包装，并在实例上添加一些有用的方法。
+  * 实例对象上会被添加下面三个实例方法:
+  * $save()
+  * $remove()
+  * $delete()
+  * 
+  * 除非在一个单独的资源上而不是一个集合上被调用，否则这三个方法与资源上对应的方法是一样的。
+  * 
+  * 这三个方法可以在资源实例上被调用。如下所示:
+  * //使用实例方法$save()
+  * User.get({id:'123'},function(user){
+  *     user.name='Ari';
+  *     User.$save();//save the User
+  * });
+  * //This is eqivalent to the collection-level
+  * //resource call
+  * User.save({id:'123'},{name:'Ari'});
+  *  */ 
+ 
+ /**
+  * $resource实例是异步的
+  * 需要格外注意，这三个方法在调用时$resource对象会立即返回一个空的数据引用。由于所有方法都是
+  * 异步执行的，所以这个数据是一个空的引用，并不是真实的数据。
+  * 
+  * 因此，虽然获取实例的调用看起来是同步的，但实际上不是。事实上，它只是数据的引用，当数据
+  * 从服务器返回AngularJS会自动将数据填充进去。
+  * 
+  * //$scope.user将为空
+  * $scope.user=User.get({id:'123'});
+  * 
+  * 这些方法也提供了回调函数，在数据返回时按预期方式调用
+  * User.get({id:'123'},function(user){
+  *     $scope.user=user;
+  * })
+  *  */ 
+
+
+/**
+ * 附加属性
+ * $resource集合和实例有两个特殊的属性用来同底层的数据定义交互。
+ * $promise(promise):
+ * $promise属性是为$resource生成的原始promise对象。这个属性是特别用来同$routeProvider.when()
+ * 在resolve时进行连接的。
+ * 
+ * 如果请求成功了，资源实例或集合对象会随promise的resolve一起返回。如果请求失败了，promise被resolve
+ * 时返回HTTP响应对象，其中没有resource属性。
+ * 
+ * $resolved(布尔型)
+ * $resolved属性在服务器首次响应时会被设置为true(无论请求是否成功)。
+ *  */  
+
+ /**
+  * 自定义$resource方法
+  * 尽管$resource服务提供了五种方法供我们使用，但它本身也具有良好扩展性，我们可以用自定义方法对
+  * 资源对象进行扩展。
+  * 
+  * 为了在$resource对象中创建自定义方法，需要向包含修改过的$http设置对象的资源类传入第三个参数，它被当做自定义方法。
+  * 
+  * 在这个对象中，键是方法的名称，值是$http设置对象。
+  * 
+  * var User=$resource('/api/users/:userId.json',{
+  *     userId:'@id',
+  *     sendEmail:{
+  *        method:'POST'
+  *     },
+  *     allInboxes:{
+  *        method:'JSONP',
+  *        isArray:true
+  *     }
+  * })
+  * 
+  * 借助这个User资源，资源集合（User资源对象）中的个体实例现在可以使用sendEmail()和
+  * update()方法了（也就是user.$sendEmail()和user.$update()）。
+  */
+
+  /**
+   * $resource 设置对象
+   * $resource设置对象和$http设置对象十分相似，仅有少量的不同。
+   * 对象中的值，也就是动作，是资源对象中某个方法的名字。
+   * 它可以包含以下键
+   * 1. method（字符串）
+   */
