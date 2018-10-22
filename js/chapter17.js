@@ -572,7 +572,54 @@ $scope.$apply(function () {
    * 通常用来进行序列化。
    * 
    * 
+   * var User = $resource('/api/users/:id',{
+   *     id: '@'
+   * },{
+   *     sendEmail:{
+   *     method: 'PUT',
+   *     transformRequest:function(data,headerFn) {
+   *         // 返回修改后的请求数据
+   *         return JSON.stringify(data);
+   *      }
+   *   }
+   * });
    * 
+   * 
+   * 6.transformResponse（函数或函数数组）
+   * 这个函数或函数数组用来对HTTP响应体和头信息进行转换，并返回转换后的版本。通常用
+   * 来进行反序列化。
+   * 
+   * var User = $resource('/api/users/:id',{
+   *     id:'@'
+   *  }, {
+   *     sendEmail: {
+   *     method: 'PUT',
+   *     transformResponse: function(data, headerFn)
+   *       {
+   *         // Return modified data for the response
+   *         return JSON.parse(data);
+   *       }
+   *     }
+   * });
+   * 
+   * 
+   * 7. cache（布尔型或缓存对象）
+   * 如果cache属性被设置为true，那么AngularJS会用默认的$http缓存对GET请求进行缓存。
+   * 如果cache属性被设置为$cacheFactory对象的一个实例，那么这个对象会用来对GET请求进行
+   * 缓存。
+   * 
+   * 如果cache属性被设置为false，那么$resource服务所发送的请求不会被缓存。
+   * 
+   * 8. timeout（数值型或promise对象）
+   * 如果timeout被设置为一个数值，那么请求将会在推迟timeout指定的毫秒数后再发送。如
+   * 果被设置为一个promise对象，那么当该promise对象被resolve时，请求会被中止。
+   * 
+   * 9. withCredentials（布尔型）
+   * 如果该属性被设置为true，那么XHR请求对象中会设置withCredentials标记。
+   * 默认情况下，CORS请求不会发送cookie，而withCredentials标记会在请求中加入Access-
+   * Control-Allow-Credentials头，这样请求就会携带目标域的cookie。
+   * 
+   * 10. responseType（字符串）
    * 
    * 
    */
