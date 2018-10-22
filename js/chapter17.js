@@ -414,3 +414,44 @@ $scope.$apply(function () {
   * 默认情况下，这个对象包含了五个常用的方法，可以同资源集合进行交互，或者创建资源对
   * 象的实例。它会生成两个基于HTTP GET类型的方法，以及三个非GET类型的方法。
   */
+
+  /**
+   * 基于HTTP GET方法
+   * 两个HTTP GET类型的方法可以接受下面三个参数
+   * params(对象):随请求一起发送的参数。它们可以是URL中的具名参数，也可以是查询参数。
+   * successFn(函数):
+   * 当HTTP响应成功时的回调函数。
+   * error(函数):
+   * 当HTTP响应非成功时的回调函数。
+   * 
+   * 1. get(params, successFn, errorFn)
+   * get方法向指定URL发送一个GET请求，并期望一个JSON类型的响应。
+   * 像上面那样不定义具体的参数，get()请求通常被用来获取单个资源。
+   * // 发起一个请求：
+   * // GET /api/users
+   * User.get(function(resp) {
+   * // 处理响应成功
+   * }, function(err) {
+   * // 处理错误
+   * });
+   * 如果参数中传入了具名参数（我们例子中的参数是id），那么get()方法会向包含id的URL发送请求：
+   * // 发起一个请求：
+   * // GET /api/users/123
+   * User.get({
+   *   id: '123'
+   * }, function(resp) {
+   * // 处理响应成功
+   * }, function(err) {
+   * // 处理错误
+   * });
+   * 
+   * 2. query(params, successFn, errorFn)
+   * query向指定URL发送一个GET请求，并期望返回一个JSON格式的资源对象集合。
+   * // 发起一个请求：
+   * // GET /api/users
+   * User.query(function(users) {
+   * // 读取集合中第一个用户
+   * var user = users[0];
+   * });
+   * query()和get()方法之间唯一的区别是AngularJS期望query()方法返回数组。
+   */
