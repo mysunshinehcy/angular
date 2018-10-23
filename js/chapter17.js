@@ -714,4 +714,65 @@ $scope.$apply(function () {
  * 服务在某些方面的功能是有限的。Restangular通过完全不同的途径实现了XHR通信，并提供了良
  * 好的使用体验。
  * 
+ * 使用Restangular能带来的所有好处在Restangular的README①文件中都有详细说明，这里我
+ * 们简单介绍几个。
+ * 
+ * 1.promise
+ * Restangular支持promise模式的异步调用，使用起来更符合AngularJS的习惯。可以像使用原
+ * 始的$http方法一样对响应进行链式操作。
+ * 2. promise展开
+ * 也可以像使用$resource服务一样使用Restangular，通过很简单的方式同时操作promise和对象。
+ * 3. 清晰明了
+ * Restangular库几乎没有复杂或神奇的东西，无需通过猜测或研究文档就可以知道它是如何工
+ * 作的。
+ * 4. 全HTTP方法支持
+ * Restangular支持所有的HTTP方法。
+ * 5. 忘记URL
+ * $resource要求明确的指定想要拉取数据的URL，Restangular并不需要事先知道URL或提前
+ * 指定它们（除基础URL外）。
+ * 6. 资源嵌套
+ * Restangular可以直接处理嵌套的资源，无需创建新的Restangular实例。
+ * 7. 一个实例
+ * 同$resource不同，使用过程中仅需要创建一个Restangular资源对象的实例。
  */
+
+
+ /**
+  * 通过Restangular有两种方式创建拉取数据的对象。可以为拉取数据的对象设置基础路由：
+  * var User=Restangular.all('users');
+  * 这样设置Restangular服务会让所有的HTTP请求将/users路径作为根路径来拉取数据。例如，
+  * 调用上述对象的getList()方法会从/users拉取数据:
+  * 当然也可以通过单个对象来发送嵌套的请求，可以用唯一的ID来代替路由发送请求
+  * var oneUser=Restangular.one('users','abc123');
+  * 上面代码的效果是调用oneUser上的get()时向/users/abc123
+  * oneUser.get().then(function(user){
+  *     // GET /users/abc123/inboxes
+  *     user.getList('inboxes');
+  * })
+  * 从上面可以看出，Restangular非常聪明，知道如何根据在Restangular源对象上调用的方法来
+  * 构造URL。但设置拉取数据的URL是很方便的，特别是当后端不支持纯粹的RESTful API时。
+  * 通过向allUrl方法传入一个独立的参数来指定请求的URL：
+  * // 搜索的所有URL都将使用
+  * // `http://google.com/`asthebaseUrl
+  * var searches =Restangular.allUrl('one', 'http://google.com/');
+  * // 将发送一个请求到GET http://google.com/
+  * searches.getList();
+  * 另外也可以通过oneURL方法针对特定的请求，设置基础URL而不是操作整个请求：
+  * var singleSearch =  Restangular.oneUrl('betaSearch', 'http://beta.google.com/1');
+  * // 触发一个请求到GET http://google.com/1
+  * singleSearch.get();
+  */
+
+  /**
+   * 使用Restangular
+   * 当Restangular将初始化的对象返回给我们后，可以通过几种不同的方法与后端API进行交互。
+   * 假设我们创建了一个Restangular对象代表公共讨论列表：
+   * 将/messages路径作为根路径来拉取数据
+   * var messages = Restangular.all('messages');
+   * 通过这个对象，可以使用getList()来获取所有信息。getList()方法返回了一个集合，其
+   * 中包含了可以用来操作特定集合的方法。
+   * 
+   * // 所有消息都是一个将被resolve成所有消息列表的promise
+   * var allMessages = messages.getList();
+   * 
+   */
