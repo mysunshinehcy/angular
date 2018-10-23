@@ -791,5 +791,83 @@ $scope.$apply(function () {
    * 由于Restangular返回promise对象，我们可以调用promise对象上的方法，因此我们可以在
    * promise对象完成时运行函数。
    * 
+   * Restangular返回的是增强过的promise对象，因此除了可以调用then方法，还可以调用一些特
+   * 殊的方法，比如$object。$object会立即返回一个空数组（或对象），在服务器返回信息后，数
+   * 组会被用新的数据填充。这对更新一个集合后，在作用域中立即重新拉取集合的场景很有用：
+   * // 然后在promise中调用
+   * messages.post(newMessage).then(function(newMsg){
+   * // 首先将消息设置成空数组
+   * // 然后一旦getList是完整的就填充它
+   *    $scope.messages = messages.getList().$object;
+   * }, function(errorReason)
+   * // 出现了一个错误
+   * });
    * 
+   * 我们也可以从集合中移除一个对象。使用remove()方法可以发送一个DELETE HTTP请求给
+   * 后端。通过调用集合中一个对象（或元素）的remove()方法来发送删除请求。
+   * 
+   * var message = messages.get(123);
+   * message.remove(); // 发送DELETE HTTP请求
+   * 
+   * 更新和储存对象是常见的操作。通常情况下，这种操作由HTTP PUT方法完成。Restangular
+   * 通过put()方法来支持这个功能。
+   * 
+   * 要更新一个对象，首先要查询这个对象，然后在实例中设置新的属性值，再调用对象的put()
+   * 方法将更新保存到后端。
+   * 
+   * 注意，在修改一个对象之前对其进行复制，然后对复制的对象进行修改和保存是一
+   * 个好做法。Restangular有自己的复制版本，因此无需对一系列方法重新进行绑定。在更
+   * 新对象时使用Restangular.copy()是一个比较好的实践。
+   * 
+   * 现在我们已经了解了如何操作集合中的实例，下面详细介绍嵌套资源。嵌套资源是指包含在
+   * 其他组件内部的组件。例如，一个特定作者所写过的所有书籍。
+   * Restangular默认支持嵌套资源。事实上，我们可以从集合中查询出特定的嵌套资源实例。
+   * var author = Restangular.one('authors', 'abc123');
+   * var author = Restangular.one('authors', 'abc123');
+   * var books = author.getList('books');
+   * Restangular中另外一个酷炫的功能是不仅可以在one和all方法创造的对象上调用post、put、
+   * getList等方法，也可以在服务器返回的对象上调用。例如，我们可以在代码中首先拉取一个作
+   * 者并进行展示，然后获取他的书籍列表：
+   * 
+   * Restangular.one('authors', 'abc123').then(function(author) {
+   *    $scope.author = author;
+   * });
+   * 
+   * // 然后在代码中将
+   * // 构建一个GET到/authors/abc123/authors的请求
+   * // 使用$scope.author，它是从服务器返回的真实对象
+   * $scope.author.getList('books');
    */
+
+   /**
+    * 我的HTTP方法们怎么办
+    * Restangular支持所有的HTTP方法。它支持GET、PUT、POST、DELETE、HEAD、TRACE、
+    * OPTIONS和PATCH。
+    * author.get(); // GET/authors/abc123
+    * author.getList('books');// GET/authors/abc123/books
+    * author.put(); // PUT/authors/abc123
+    * author.post(); // POST/authors/abc123
+    * author.remove(); // DELETE/authors/abc123
+    * author.head(); // HEAD/authors/abc123
+    * author.trace(); // TRACE/authors/abc123
+    * author.options(); // OPTIONS/authors/abc123
+    * author.patch(); // PATCH/author/abc123
+    * 
+    * 如果后端服务器映射资源的方式和我们预期的不符，Restangular也支持自定义HTTP方法。
+    * 例如，如果我们想得到作者的传记（不是RESTful资源），可以使用customMETHOD()函数设
+    * 置URL（METHOD可以被下面的方法替代：GET、 GETLIST、DELETE、POST、PUT、HEAD、
+    * OPTIONS、PATCH、TRACE）：
+    * 
+    * // 映射一个GET到/users/abc123/biography的请求
+    * author.customGET("biography");
+    * // 或者带有一个新bio对象的POST
+    * // as {body: "Ari's bio"}
+    * // 中间的两空字段是
+    * // 参数字段或任意自定义头部
+    * author.customPOST({body: 'Ari\'s Bio'},// post body
+    * "biography", // 路由
+    * {}, // 自定义参数
+    * {}); // 自定义头部
+    */
+
+    /**自定义查询参数和头 */
