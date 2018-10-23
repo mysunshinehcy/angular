@@ -620,6 +620,98 @@ $scope.$apply(function () {
    * Control-Allow-Credentials头，这样请求就会携带目标域的cookie。
    * 
    * 10. responseType（字符串）
+   * responseType选项会在请求中设置XMLHttpRequestResponseType属性。我们可以使用以下
+   * HTTP请求类型之一：
+   * " "（字符串，默认）；
+   * "arraybuffer"（ArrayBuffer）；
+   * "blob"（blob对象）
+   * "document"（HTTP文档）
+   * "json"（从JSON对象解析而来的JSON字符串）
+   * "text"（字符串）；
+   * "moz-blob"（Firefox的接收进度事件）；
+   * "moz-chunked-text"（文本流）；
+   * "moz-chunked-arraybuffer"（ArrayBuffer流）。
    * 
-   * 
+   * 11. interceptor（对象）
+   * 拦截器属性有两个可选的方法:response或responseError。这些拦截器像普通的$http
+   * 拦截器一样，由$http请求对象调用。
    */
+
+  /**
+   * $resource 服务
+   * 我们可以将$resource服务当作自定义服务的基础。创建自定义服务给了我们对应用进行高
+   * 度自定义的能力，可以对远程服务通信进行抽象，并且从控制器和视图中解耦出来。
+   * 
+   * 最后，我们强烈建议在自定义的服务对象内部使用$resource。这不仅可以将加载远程服务
+   * 抽象成一个独立的AngularJS服务，同时将其从控制器中解耦，保证控制器的代码清洁。另外，
+   * 还使得我们可以不必关心控制器是如何取得数据的。
+   * 
+   * AngularJS对象内部的这种解耦方式同样对测试有益，因为我们可以将后端请求的结果进行
+   * 储存和模拟，而不用担心在测试时真的会将请求发送给后端。
+   * 
+   * 要创建一个封装$resource的服务，需要将$resource的服务注入到我们用来封装的服务对
+   * 象中，并像平时一样调用其中的方法。
+   */
+
+  angular.module('myApp',['ngResource']).factory('UserService',['$resource',function($resource){
+      return $resource('/api/users/:id',{
+          id:'@'
+      },{
+          update:{
+              method:'PUT'
+          }
+      });
+  }])
+
+  /**
+   * $resourceAPI
+   * 通过$resource()方法来使用$resource服务。这个方法可以接受三个参数。
+   * url（字符串）
+   * 我们在这里传入一个包含所有参数的，用来定位资源的参数化URL字符串模板（参数以:符
+   * 号为前缀）。对URL中的每个参数，都可以通过它们的名字来为其赋值：
+   * $resource('/api/users/:id.:format', {
+   *    format: 'json',
+   *    id: '123'
+   * });
+   * 这里需要注意，如果:之前的参数是空的（上面例子中的:id），那么URL中的这部分会被压
+   * 缩成一个.符号。
+   * 
+   * 如果我们使用的服务器要求在URL中输入端口号，例如http://localhost:3000，
+   * 我们必须对URL 进行转义。这种情况下URL 规则看起来是这样的：
+   * $resource('http://localhost\\:3000/api/users/:id.json')。
+   * 
+   * paramDefaults（可选，对象）
+   * 第二个参数中包含了发送请求时URL中参数的默认值。对象中的键会与参数名进行匹配。如
+   * 果我们传入了一个没有在URL中设置过的参数，那它会以普通的查询字符串的形式被发送。
+   * 
+   * 例如，如果URL字符串具有/api/users/:id这样的签名，并且我们将默认值设置为{id:
+   * '123', name: 'Ari' }，那么URL最终会被转换成/api/users/123?name=Ari。
+   * 
+   * 这里可以像上面一样硬编码一个默认值来传入一个静态值，也可以设置它从一个数据对象中
+   * 读取动态值。
+   * 
+   * 如果要设置动态值，需要在值之前加上@字符作为前缀。
+   * 
+   * actions（可选，对象）
+   * 动作对象是具有自定义动作，并且可以对默认的资源动作进行扩展的hash对象。
+   * 在这个对象中，对象的键就是自定义动作的名字，而$http设置对象的值会对URL中相应的
+   * 参数进行替换。
+   * 
+   * 例如，我们可以用如下形式在资源上定义一个新的update动作：
+   * $resource('/api/users/:id.:format', {
+   *    format: 'json',
+   *    id: '123'
+   * }, { 
+   *    update: { 
+   *    method: 'PUT'
+   *    }
+   * });  
+   */
+
+/**
+ * Restangular 简介
+ * 为什么不用$http或$resource？尽管$http和$resource是AngularJS的内置服务，但这两个
+ * 服务在某些方面的功能是有限的。Restangular通过完全不同的途径实现了XHR通信，并提供了良
+ * 好的使用体验。
+ * 
+ */
