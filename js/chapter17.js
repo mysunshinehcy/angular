@@ -774,5 +774,22 @@ $scope.$apply(function () {
    * 
    * // 所有消息都是一个将被resolve成所有消息列表的promise
    * var allMessages = messages.getList();
+   * 同样可以使用Restangular对象来创建信息。使用post()方法来创建message对象。
+   * 
+   * post方法可以接受一个必要参数，参数类型是对象，并向指定的URL发送一个POST请求。
+   * 我们也可以向请求中添加查询参数和头。
+   * 
+   * // POST到/messages
+   * var newMessage = {
+   *     body: 'Hello world'
+   * };
+   * 
+   * messages.post(newMessage);
+   * // 或者我们将在一个元素上调用这个函数
+   * // 以创建嵌套的资源
+   * var message = Restangular.one('messages', 'abc123'); message.post('replies', newMessage);
+   * 由于Restangular返回promise对象，我们可以调用promise对象上的方法，因此我们可以在
+   * promise对象完成时运行函数。
+   * 
    * 
    */
