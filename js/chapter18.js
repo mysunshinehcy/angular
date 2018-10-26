@@ -92,11 +92,11 @@
  * X-Requset-With头默认就是移除掉的，但是再次确认它已经被移除没有坏处。
  */
 
-angular.module('myApp',[])
-  .config(function($httpProvider){
-      $httpProvider.defaults.userXDomain=true;
-      delete $httpProvider.defaults.headers.common['X-Requset-With'];
-  })
+angular.module('myApp', [])
+    .config(function ($httpProvider) {
+        $httpProvider.defaults.userXDomain = true;
+        delete $httpProvider.defaults.headers.common['X-Requset-With'];
+    })
 
 
 /**
@@ -172,7 +172,7 @@ angular.module('myApp',[])
  * AngularJS中的非简单请求与普通请求看起来没有什么区别：
  */
 
-$http.delete("https://api.github.com/api/users/1").sucess(function(data){
+$http.delete("https://api.github.com/api/users/1").sucess(function (data) {
     //数据
 })
 
@@ -188,3 +188,33 @@ $http.delete("https://api.github.com/api/users/1").sucess(function(data){
  * 
  * 为了实现服务器端代理，需要架设一个本地服务器来处理我们所有的请求，并负责向第三方发送实际的请求。
  */
+
+
+/**
+ * JSON是JavsScript Object Notation的简写，是一种看起来像JavaScript对象的数据交换格式。
+ * 事实上，当JavaScript加载它时，它确实会被当做一个对象来解析。AngularJS也会将所有以JSON
+ * 格式返回的JavaScript对象解析为一个与之对应的Angular对象。
+ */
+
+//例如，如果服务器返回以下JSON：
+[{
+    "msg": "This is the first msg",
+    state: 1
+}, {
+    "msg": "This is the second msg",
+    state: 2
+}, {
+    "msg": "This is the third msg",
+    state: 1
+}, {
+    "msg": "This is the fourth msg",
+    state: 3
+}]
+
+//当AngularJS通过$http服务收到这个数据后，可以像普通JavaScript对象那样来引用其中的数据:
+
+$http.get('/v1/messages.json')
+    .success(function (data, status) {
+        $scope.first_msg = data[0].msg;
+        $scope.first_state = data[0].state;
+    });
