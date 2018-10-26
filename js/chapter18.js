@@ -218,3 +218,34 @@ $http.get('/v1/messages.json')
         $scope.first_msg = data[0].msg;
         $scope.first_state = data[0].state;
     });
+
+/**
+ * 使用XML
+ * 尽管AngularJS能够以完全透明的方式来处理从服务器返回的JSON对象，我们同样可以使用其他的数据格式。
+ * 假如服务器返回的是XML而非JSON格式的数据，需要将其转换成JavaScript对象。
+ * 
+ * 幸好，有不少出色的开源库可以使用，同样，某些浏览器也内置了解析器，可以帮助我们将
+ * XML格式转换成JavaScript对象。
+ * 
+ * 创建一个工厂服务以开始使用这个轻量的XML解析器，这个服务的功能很简单，就是在DOM中解析XML
+ */
+
+angular.factory('xmlParser',function(){
+    var x2js=new X2JS();
+    return {
+        xml2json:x2js.xml2json,
+        json2xml:x2js.json2xml_str
+    };
+});
+
+/**
+ * 借助这个轻量的解析服务，可以将$http请求返回的XML解析成JSON格式，如下所示
+ */
+
+angular.factory('Data',[$http,'xmlParser',function($http,xmlParser){
+    $http.get('/api/msgs.xml',{
+        transformResponse:function(data){
+            return xmlParser.xml2json(data);
+        }
+    })
+}])
