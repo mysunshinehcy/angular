@@ -230,11 +230,11 @@ $http.get('/v1/messages.json')
  * 创建一个工厂服务以开始使用这个轻量的XML解析器，这个服务的功能很简单，就是在DOM中解析XML
  */
 
-angular.factory('xmlParser',function(){
-    var x2js=new X2JS();
+angular.factory('xmlParser', function () {
+    var x2js = new X2JS();
     return {
-        xml2json:x2js.xml2json,
-        json2xml:x2js.json2xml_str
+        xml2json: x2js.xml2json,
+        json2xml: x2js.json2xml_str
     };
 });
 
@@ -242,9 +242,9 @@ angular.factory('xmlParser',function(){
  * 借助这个轻量的解析服务，可以将$http请求返回的XML解析成JSON格式，如下所示
  */
 
-angular.factory('Data',[$http,'xmlParser',function($http,xmlParser){
-    $http.get('/api/msgs.xml',{
-        transformResponse:function(data){
+angular.factory('Data', [$http, 'xmlParser', function ($http, xmlParser) {
+    $http.get('/api/msgs.xml', {
+        transformResponse: function (data) {
             return xmlParser.xml2json(data);
         }
     })
@@ -299,4 +299,93 @@ angular.factory('Data',[$http,'xmlParser',function($http,xmlParser){
  * 3)403:禁止的请求
  * 4)404:页面找不到
  * 5)500:服务器错误
+ * 
+ * 当客户端收到这些状态码时会做出相应的响应。
+ * 数据流程如下:
+ * 1)一个未经过身份验证的用户浏览了我们的站点
+ * 2)用户试图访问一个受保护的资源，被重定向到登录页面，或者用户手动访问了登录页面
+ * 3)用户输入了他的登录ID(用户名或电子邮箱)以及密码，接着AngularJS应用通过了POST
+ * 请求将用户的信息发送到服务端
+ * 4)服务端对ID和密码进行校验，检查它们是否匹配
+ * 5)如果ID和密码匹配，服务端生成一个唯一的令牌，并将其同一个状态码为200的响应一起返回。
+ * 如果ID和密码不匹配，服务器返回一个状态码为401的响应。
+ * 
+ * 对一个已经通过身份验证的用户(通过了上面5个步骤的用户)，流程如下:
+ * 1)用户请求一个受保护的资源路径(比如他自己的账号页面);
+ * 2)如果用户尚未登录，应用汇将他重定向到登录页面。如果用户登录了，应用会使用该会话
+ * 对应的令牌来发送请求
+ * 3)服务器对令牌进行校验，并根据请求返回合适的数据。
  */
+
+/**
+ * 客户端身份验证
+ * 前面一节定义了身份验证机制需要处理的一些行为
+ * 1)重定向未经过身份验证的页面请求
+ * 2)捕获所有响应状态码非200的XHR请求，并进行相应的处理
+ * 3)在整个页面会话中持续监视用户的身份验证情况
+ * 
+ * 为了对未通过验证的用户访问受保护资源的行为进行重定向，需要能够对公共资源和受保护资源进行区分。
+ * 
+ * 有下面几种方法可以将路由定义为公共或非公共
+ * 
+ * 1.保护API访问的资源
+ * 如果想要对一个会发送受保护的API请求(例如，一个服务器可能返回401状态码的API请求)
+ * 的路由进行保护，但又希望可以正常加载页面，可以简单地通过$http拦截器来实现。
+ * 
+ * 想要创建一个$http拦截器并能够处理未通过身份验证的API请求，首先要创建一个拦截器来处理所有的响应。
+ * 现在，我们在应用的.config()代码块内设置$http响应拦截器，并将$httpProvider注入其中
+ */
+
+angular.module('myApp', []).config(function ($httpProvider) {
+    //在这里构造拦截器
+    //这个拦截器会处理所有请求的响应以及响应错误
+    var interceptor = function ($q, $rootScope, Auth) {
+        return {
+            'response': function (resp) {
+                if (resp.config.url == '/api/login') {
+                    //假设API服务器返回的数据格式如下:
+                    //{token:'AUTH_TOKEN'}
+                    Auth.setToken(resp.data.token);
+                }
+                return resp;
+            },
+            'responseError': function (rejection) {
+                //错误处理
+                switch (rejection.status) {
+                    case 401:
+                        if (rejection.config.url !== 'api/login')
+                            //如果当前不是在登录页面
+                            $rootScope.$broadcast('auth:loginRequired');
+                        break;
+                    case 403:
+                        $rootScope.$broadcast('auth:forbidden');
+                        break;
+                    case 404:
+                        $rootScope.$broadcast('page:notFound');
+                        break;
+                    case 500:
+                        $rootScope.$broadcast('server:error');
+                        break;
+                }
+                return $q.reject(rejection);
+            }
+        }
+    }
+});
+
+/**
+ * 这个授权拦截器会处理特定请求中一些可预见的服务器响应状态码。当拦截器捕获到401状
+ * 态码，会通过$broadcasts从$rootScope开始向所有的子作用域广播此事件。
+ * 
+ * 另外，拦截器会为任何返回200状态码的请求将令牌保存到/api/login登录路由中。
+ * 为了实现这个拦截器，需要让$httpProvider将这个拦截器添加到拦截器链中：
+ */
+
+ angular.module('myApp',[]).config(function($httpProvider){
+     //在这里构造拦截器
+     var interceptor=function($q,$rootScope,Auth){
+         //...
+     };
+     //将拦截器和$http的request/response链整合在一起
+     $httpProvider.interceptor.push(interceptor);
+ })
