@@ -207,9 +207,9 @@ $http.delete("https://api.github.com/api/users/1").sucess(function (data) {
     "msg": "This is the third msg",
     state: 1
 }, {
-        "msg": "This is the fourth msg",
-        state: 3
-    }]
+    "msg": "This is the fourth msg",
+    state: 3
+}]
 
 //当AngularJS通过$http服务收到这个数据后，可以像普通JavaScript对象那样来引用其中的数据:
 
@@ -341,3 +341,65 @@ angular.module('myApp', ['ngRoute'])
                 redirectTo: '/'
             });
     });
+/**
+ * 上面每一个路由都定义了自身的access_level，可以根据这一点判断当前用户的授权状态，以及用户的级别是否有权限访问当前路由。
+ * 
+ * 此时，用户可能处于以下两种状态
+ * 1)未经过身份验证的匿名用户
+ * 2)通过身份验证的已知用户
+ * 
+ * 为了验证用户的身份，需要创建一个服务来对已经存在的用户进行监视。同时需要让服务能够访问浏览器的cookie，这样当用户重新登录时，只要会话有效就
+ * 无需再次进行身份验证。
+ * 
+ * 这个小服务包含了一些操作用户对象的辅助函数。
+ */
+
+angular.module('myApp.services', [])
+    .factory('Auth', function ($cookieStore, ACCESS_LEVELS) {
+        var _user = $cookieStore.get('user');
+
+        var setUser = function (user) {
+            if (!user.role || user.role < 0) {
+                user.role = ACCESS_LEVELS.pub;
+            }
+            _user = user;
+            $cookieStore.put('user', _user);
+        };
+        return {
+            isAuthorized: function (lvl) {
+                return _user.role >= lvl;
+            },
+            setUser: setUser,
+            isLoggedIn: function () {
+                return _user ? true : false;
+            },
+            getUser: function () {
+                return _user;
+            },
+            getId: function () {
+                return _user ? _user.id : '';
+            },
+            getToken: function () {
+                return _user ? _user.token : '';
+            },
+            logout: function () {
+                $cookieStore.remove('user');
+                _user = null;
+            }
+        }
+    })
+
+    //现在，当用户已经通过身份验证并登录后，可以在$routeChangeStart事件中对其有效性进行检查。
+    angular.module('myApp',[]).run(function($rootScope,$location,Auth){
+        //给$routeChangeStart设置监听
+        $rootScope.$on('$routeChangeStart',function(evt,next,curr){
+            if(!Auth.isAuthorized(next.$$route.access_levels)){
+                if(Auth.isLoggedIn()){
+                    //用户登录了，但没有访问当前视图的权限
+                    $location.path('/');
+                }else{
+                    $location.path('/login');
+                }
+            }
+        })
+    })
