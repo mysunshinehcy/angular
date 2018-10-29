@@ -207,9 +207,9 @@ $http.delete("https://api.github.com/api/users/1").sucess(function (data) {
     "msg": "This is the third msg",
     state: 1
 }, {
-    "msg": "This is the fourth msg",
-    state: 3
-}]
+        "msg": "This is the fourth msg",
+        state: 3
+    }]
 
 //当AngularJS通过$http服务收到这个数据后，可以像普通JavaScript对象那样来引用其中的数据:
 
@@ -389,17 +389,169 @@ angular.module('myApp.services', [])
         }
     })
 
-    //现在，当用户已经通过身份验证并登录后，可以在$routeChangeStart事件中对其有效性进行检查。
-    angular.module('myApp',[]).run(function($rootScope,$location,Auth){
-        //给$routeChangeStart设置监听
-        $rootScope.$on('$routeChangeStart',function(evt,next,curr){
-            if(!Auth.isAuthorized(next.$$route.access_levels)){
-                if(Auth.isLoggedIn()){
-                    //用户登录了，但没有访问当前视图的权限
-                    $location.path('/');
-                }else{
-                    $location.path('/login');
-                }
+//现在，当用户已经通过身份验证并登录后，可以在$routeChangeStart事件中对其有效性进行检查。
+angular.module('myApp', []).run(function ($rootScope, $location, Auth) {
+    //给$routeChangeStart设置监听
+    $rootScope.$on('$routeChangeStart', function (evt, next, curr) {
+        if (!Auth.isAuthorized(next.$$route.access_levels)) {
+            if (Auth.isLoggedIn()) {
+                //用户登录了，但没有访问当前视图的权限
+                $location.path('/');
+            } else {
+                $location.path('/login');
             }
+        }
+    })
+})
+
+/**
+ * 发送经过身份验证的请求
+ * 
+ * 当我们通过了身份验证，并取回了用户的授权令牌后，就可以在向服务器发送请求时使用令牌。同前面
+ * 内容介绍的一样，我们希望服务器可以根据这个唯一的令牌对用户进行验证。从服务器的角度看，当收到
+ * 一个带有令牌的请求时，验证令牌的有效性是服务器的责任之一。
+ * 
+ * 如果提供的令牌是合法的，且与一个合法用户是关联的状态，那服务器就会认为用户的身份是合法且安全的。
+ * 
+ * 通过令牌进行身份验证的安全性取决于通信所采用的通道，因此尽可能地使用SSL连接可以提高安全性。
+ * 
+ * 如果用户已经通过了身份验证，可以在发送请求时单独给每个请求都加入验证信息，或者把令牌附加到所有的请求中。
+ * 
+ * 手动使用身份令牌手动创建一个可以发送令牌的请求，只要将token当作参数或请求头添加到请求中即可。
+ * 
+ * 例如，如果我们相对服务器发出一个请求，此时我们正在这个服务器上通过Backend服务请求用户分析数据。
+ */
+
+//当向后端发送请求时，请求会被添加token参数
+angular.module('myApp', []).service('Backend', function ($http, $q, $rootScope, Auth) {
+    this.getDashboardData = function () {
+        $http({
+            method: 'GET',
+            url: 'http://myserver.com/api/dashboard',
+            //简单地将token当作参数(或请求头)发送就可以进行令牌验证
+            params: {
+                token: Auth.getToken()
+            }
+        }).success(function (data) {
+            return data.data;
+        }).catch(function (reason) {
+            $q.reject(reason);
+        });
+    };
+});
+
+
+/**
+ * 自动添加身份令牌
+ * 更进一步，如果想要为每个请求都添加上当前用户的令牌，可以创建一个请求拦截器，并将令牌当做参数添加进请求中。
+ * 
+ * 创建请求拦截器的方法和前面创建相应拦截器的方法类似，只要将拦截目标从response换成requesr即可
+ */
+
+angular.module('myApp', []).config(function ($httpProvider) {
+    //在这里构造拦截器
+    var interceptor = function ($q, $rootScope, Auth) {
+        return {
+            'request': function (req) {
+                return req;
+            },
+            'requestError': function (reqErr) {
+                return reqErr;
+            }
+        }
+    }
+})
+
+/**
+ * 在请求拦截器内部可以加入向请求中添加token参数的业务逻辑，通过用户是否持有令牌来检查身份验证情况
+ * 同时需要确保不会将手动添加的同名参数覆盖。
+ */
+
+// function($q,$rootScope,Auth){
+//     return {
+//         'request':function(req){
+//             req.params=req.params||{};
+//             if(Session.isAuthenticated()&&!req.params.token){
+//                 req.params.token=Auth.getToken();
+//             }
+//             return req;
+//         }
+//     }
+// }
+
+
+/**和MongoDB通信 */
+/**
+ * 即使没有后端服务，我们依然可以直接同提供了RESTful接口的数据库进行通信。
+ * 
+ * 可以直接同Mongo进行通信，而无需创建后端服务。
+ * 
+ * 在这个例子中，我们使用MongoLab，这是一个SAAS服务，提供了可管理的MongoDB实例。
+ * 
+ * 为了同MongoDB通信，首先需要针对Restangular对象进行一些自定义配置。
+ * 
+ * 下面的配置会改变全局的Restangular对象。如果我们想将设置封装起来，针对单个数据库进行配置
+ * 就需要创建一个服务，将自定义的Restangular对象封装起来。
+ */
+
+//首先设置API密钥，鉴于这个密钥在整个应用中都是不变的，可以将它设置成常量。
+var app = angular.module('myApp', ['restangular']).constant('apiKey', 'YOUR_API_KEY');
+
+//现在这个密钥可以被注入到应用的任何部分当中。接下来在模块的config()代码块中进行设置。
+
+//为了使用MongoLab，需要将baseUrl设置成API的切入点
+//...
+app.config(function (RestangularProvider, apiKey) {
+    RestangularProvider.setBaseUrl('https://api.mongolab.com/api/1/databases/YOURDB/collections');
+});
+
+//接下来，任何发送给后端数据库的请求都需要设置API密钥。通过Restangular的setDefault RequestParams()方法可以方便地进行设置
+app.config(function (RestangularProvider, apiKey) {
+    //
+    RestangularProvider.setDefaultRequestParams({
+        apiKey: apiKey
+    });
+});
+
+//接下来需要更新Restangular中的字段映射，将MongoDB的_id.$oid字段映射到Restangular的id字段上。通过
+//setRestangularFields()函数可以方便地实现这个需求：
+app.config(function (RestangularProvider, apiKey) {
+    //...
+    RestangularProvider.setRestangularFields({
+        id: '_id.$oid'
+    });
+});
+
+//最后需要覆盖_id字段，这个字段是MongoDB在更新记录时设置的。Mongo不允许覆盖_id字段，所以我们通过
+//Restangular来模拟这个过程。鉴于Restangular会调用路由来更新元素，我们不需要担心对象无法被覆盖。
+
+app.config(function (RestangularProvider, apiKey) {
+    //..
+    RestangularProvider.setRequestInterceptor(function (elem, operation, what) {
+        if (operation === 'put') {
+            elem._id = undefined;
+            return elem;
+        }
+        return elem;
+    });
+});
+
+//为了保证完整性，下面是完整的配置代码
+angular.module('myApp', ['restangular'])
+    .constant('apiKey', 'API_KEY')
+    .config(function (RestangularProvider, apiKey) {
+        RestangularProvider.setBaseUrl('https://api.mongolab.com/api/1/databases/YOURDB/collections');
+        RestangularProvider.setDefaultRequestParams({
+            apiKey: apiKey
+        });
+        RestangularProvider.setRestangularFields({
+            id: '_id.$oid'
+        });
+        RestangularProvider.setRequestInterceptor(function (elem, operation, what) {
+            if (operation === 'put') {
+                elem._id = undefined;
+                return elem;
+            }
+            return elem;
         })
     })
