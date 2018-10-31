@@ -84,4 +84,23 @@ User.get(fromId).then(function (user) {
   * promise总是异步执行的，可以放心使用，无需担心它们会阻塞应用的其他部分。
   */
 
-  
+  /**
+   * Angular中的promise
+   * Angular的事件循环给予了Angular特有的能力，能在$rootScope.$evalAsync阶段中执行promise
+   * promise会坐等$digest运行循环结束。
+   * 
+   * 这件事让我们能毫无压力地把promise的结果转换到视图上。它也能让我们不加思考地把
+   * XHR调用的结果直接赋值到$scope对象的属性上。
+   */
+
+  /**
+   * 如何创建一个promise
+   * 想要在Angular中创建promise，可以使用内置的$q服务。$q服务在它的deferred API中提供了一些方法。
+   */
+
+  //首先，需要把$q服务注入到想要使用它的对象中
+  angular.module('myApp',[]).factory('GithubService',['$q',function($q){
+      //现在就可以访问到$q库了
+  }])
+
+  //要创建一个deferred对象，可以调用defer()方法
