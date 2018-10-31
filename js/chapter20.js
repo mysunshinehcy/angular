@@ -104,3 +104,20 @@ User.get(fromId).then(function (user) {
   }])
 
   //要创建一个deferred对象，可以调用defer()方法
+  var deferred=$q.defer();
+
+  //deferred对象暴露了三个方法，以及一个可以用于处理promise的promise属性
+  //resolve(value):resolve函数用这个值来执行deferred promise
+  deferred.resolve({name:'Ari',username:'@auser'})
+  //reject(reason):这个方法一个原因来拒绝deferred promise。它等同于使用一个'拒绝'
+  //来执行一个promise。
+  deferred.reject("can't update user");
+  //等同于
+  deferred.resolve($q.reject("can't update user"));
+
+  //notify(value):这个方法用promise的执行状态来进行响应。
+
+  /**
+   * 例如，如果我们要从promise返回一个状态，可以使用notify()函数来传递它。
+   * 假设我们想要从一个promise创建多个长时间运行的请求，可以通过notify函数发回一个过程通知
+   */

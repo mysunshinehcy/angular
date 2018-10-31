@@ -4,4 +4,17 @@ angular.module('myApp',[]).controller('DashboardController',['$scope','githubSer
     User.getPullRequest(123).then(function(data){
         $scope.pullRequests=data.data;
     })
-}])
+}]).factory('GithubService',function($q,$http){
+    //从仓库获取事件
+    var getEventsFromRepo=function(){
+        //任务
+    }
+    var service={
+        makeMultipRequests:function(repos){
+            var d=$q.defer(),percentComplete=0,output=[];
+            for(var i=0;i<repos.length;i++){
+                
+            }
+        }
+    }
+})
