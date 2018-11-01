@@ -24,4 +24,12 @@ angular.module('myApp', []).controller('DashboardController', ['$scope', 'github
         }
     }
     return service;
+}).controller('HomeController', function ($scope, GithubService) {
+    GithubService.makeMultipRequests(['auser/beehive', 'angular/angular.js']).then(function (result) {
+        //处理结果
+    }, function (err) {
+        //发生错误了
+    }, function (percentComplete) {
+        $scope.progress = percentComplete;
+    })
 })
