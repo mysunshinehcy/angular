@@ -121,3 +121,36 @@ User.get(fromId).then(function (user) {
    * 例如，如果我们要从promise返回一个状态，可以使用notify()函数来传递它。
    * 假设我们想要从一个promise创建多个长时间运行的请求，可以通过notify函数发回一个过程通知
    */
+
+  /**
+   * 可以用两种不同方式跟promise交互。
+   * then(successFn,errFn,notifyFn):
+   * 无论promise成功还是失败了，当结果可用之后，then都会立刻异步调用successFn或者errFn。这个方法
+   * 始终用一个参数来调用回调函数，结果，或者是拒绝的路由。
+   * 
+   * 在promise被执行或者拒绝之前，notifyFn回调可能会被调用0到多次，以提供过程状态的提示。
+   * 
+   * then()方法总是返回一个新的promise，可以通过successFn或者errFn这样的返回值执行或者被拒绝。
+   * 它也可能通过notifyFn提供通知。
+   * 
+   * catch(errFn):
+   * 这个方法就只是个帮助函数，能让我们用.catch(function(reason){})取代err回调
+   * $http.get('/repos/angular/angular.js/pulls').catch(function(reason){deferred.reject(reason);});\
+   * 
+   * finally(callback):
+   * finally方法允许我们观察promise的履行或者拒绝，而无需修改结果的值。当我们需要释放一个资源，或者是运行
+   * 一些清理工作，不管promise是成功还是失败时，这个方法很有用。
+   * 
+   * 我们不能直接调用这个方法，因为finally是IE中JavaScript的一个保留字。纠结到最后，好这样调用它了。
+   * promise['finally'](function(){});
+   * 
+   * Angular的$q deferred对象是可以串成链，这样即使是then，返回的也是一个promise。这个promise一被执行，then返回的
+   * promise就已经是resolved或者rejected的了。
+   * 
+   * 这些promise也就是Angular能支持$http拦截器的原因。
+   * 
+   * $q服务类似于原始的Kris Kowal的Q库:
+   * 1)$q是跟Angular的$rootScope模型继承的，所以在Angular中，执行和拒绝都很快。
+   * 2)$q promise是跟Angular模板引擎继承的，这意味着在视图中找到的任何promise都会在视图中被执行或者拒绝。
+   * 3)$q很小，所以没有包含Q库的完整功能。
+   */
