@@ -1,5 +1,8 @@
 var createError = require('http-errors');
 var express = require('express');
+var routes = require('./routes');
+var hits = require('./routes/hits');
+var http = require('http');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -26,7 +29,8 @@ app.use('/users', usersRouter);
 app.use(function(req, res, next) {
   next(createError(404));
 });
-
+app.get('/hits', hits.count);
+app.post('/hit', hits.registerNew);
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
