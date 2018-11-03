@@ -1,7 +1,7 @@
 // Karma configuration
 // Generated on Sat Nov 03 2018 18:38:47 GMT+0800 (中国标准时间)
 
-module.exports = function(config) {
+module.exports = function (config) {
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -14,20 +14,41 @@ module.exports = function(config) {
 
 
     // list of files / patterns to load in the browser
-    files: [
+    files: [{
+        pattern: 'app/lib/angular.js',
+        included: false
+      },
+      {
+        pattern: 'app/lib/angular-route.js',
+        included: false
+      },
+      {
+        pattern: 'app/lib/angular-mocks.js',
+        included: false
+      },
+      {
+        pattern: 'app/js/**/*.js',
+        included: false
+      },
+      {
+        pattern: 'test/**/*.js',
+        included: false
+      },
+      {
+        pattern: 'test/lib/**/*.js',
+        included: false
+      },
       'test-main.js'
     ],
 
 
     // list of files / patterns to exclude
-    exclude: [
-    ],
+    exclude: ['js/main.js'],
 
 
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
-    preprocessors: {
-    },
+    preprocessors: {},
 
 
     // test results reporter to use
@@ -64,6 +85,7 @@ module.exports = function(config) {
 
     // Concurrency level
     // how many browser should be started simultaneous
-    concurrency: Infinity
+    concurrency: Infinity,
+    captureTimeout: 60000,
   })
 }
