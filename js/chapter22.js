@@ -525,3 +525,50 @@ it('should update the name',function(){
  //val()。最后，可以简单地通过调用输入元素的.val()来获取输入框的当前值。我们会用这个来检验指定输入元素的当前值
  input('color').select('red');
  input('color').val();//颜色将是'red'
+
+ /**
+  * 要从给定的选项输入框上选中指定的option值也很容易。我们会使用select()方法从
+  * select标签上选择一个option。
+  * select()方法返回一个对象，带有一个方法，可以用于选择这个select元素的一个选项。它
+  * 也让我们能在多选select中选取多个项。
+  * option()。option()方法能让我们选中列表中的一个值。
+  * select('color').option('red');
+  * option()方法带有一个值参数，该参数是字符串类型。
+  * 这个value参数是一个字符串，可以让select选中给定的值。
+  * options()。options()方法能让我们选中多选select中的多个值。
+  * select('color').options('Ghostbusters', 'Titanic');
+  * 在必要的情况下，为了选中option的值，options()方法可以带任意数量的参数，这时参数
+  * 是一组字符串。
+  * 这组字符串是要从多选select中选择的值。
+  */
+
+  /**
+   * 重复循环元素
+   * Angular通过ng-repeat指令，使从列表创建DOM元素变得非常容易，Angular场景也让我们
+   * 能更容易测试这些循环指令。
+   * 
+   * repeater()函数自身返回一个对象，带有多个方法，用这些方法可以查询视图中的一组元素。
+   * 它最多可带两个参数。
+   * 
+   * 1)选择器（字符串）。jQuery选择器，指向那些我们所关注的元素。
+   * 2)标签（字符串，可选）。标签是用于测试输出的一个字符串。
+   * 
+   * 方法如下:
+   * count()。count()方法返回重复器里有多少行与DOM中的jQuery选择器匹配。
+   * repeater('#phonebook tr').count();
+   * 
+   * column()。column()方法返回一个数组，数组中的元素是列中的值，这些值包含了与DOM
+   * 中jQuery选择器匹配的重复器中的给定绑定。
+   * 
+   * repeater('#phonebook tr').column('person.name');
+   * 
+   * column()方法带有一个字符串类型的绑定参数， 这个绑定是针对重复器中指定元素的。它
+   * 是在元素中渲染的绑定的名称。
+   * 
+   * row()。row()方法返回一个数组，数组中的元素是行中的值，这些值包含了与DOM中给定
+   * jQuery选择器匹配的重复器中的给定绑定。
+   * 
+   * repeater("#phonebook tr").row(0);
+   * row()方法带有一个整形的索引参数。
+   * index是要从中返回给定绑定的列的序号。
+   */
