@@ -572,4 +572,264 @@ it('should update the name',function(){
    * row()方法带有一个整形的索引参数。
    * index是要从中返回给定绑定的列的序号。
    */
-//https://www.cnblogs.com/cai170221/p/7065096.html
+
+  /**
+   * 模拟和测试帮助函数
+   * 开始写测试之前，我们需要理解测试的一个核心特性：模拟。在测试中，模拟是一个古老的
+   * 概念，允许我们在受控环境下定义模拟对象来模仿真实对象的行为。
+   * 
+   * AngularJS提供了它自己的模拟库，称为angular-mocks，它位于angular-mock.js文件中。模
+   * 拟对象是专门设计用于单元测试的。
+   * 
+   * 要在单元测试中建立模拟对象，需要确保在Karma配置中包含了angular-mock.js文件。
+   * 我们必须确保test/karma.conf.js文件的files数组中包含了angular-mock.js。包含了这个依赖之
+   * 后，就可以创建Angular模块的模拟引用了。
+   * 
+   * 例如，在一般的单元测试设置里，我们会创建一个describe执行环境，在每个测试在
+   * describe的上下文中运行之前，我们在这个执行环境中调用angular.mock.module：
+   * 
+   * 注意，我们只要调用module就可以了，因为angular.mock.module函数被发布在全局作用域的window接口上了。
+   */
+
+  describe('myApp',function(){
+      //模拟'myApp' angular模块
+      beforeEach(angular.mock.module('myApp'));
+      it('...')
+  })
+  
+/**
+ * 建立了模拟的Angular模块之后，可以把连接到这个模块上的任意服务注入到我们测试代码里。
+ * 凭借这些测试，我们需要像Angular那样在运行时注入依赖关系。在我们的单元测试中，这
+ * 一步是必要的，因为我们隔离了想要测试的功能。
+ * 要注入一个依赖，在beforeEach函数调用中使用angular.mock.inject方法，类似之前做的那样。
+ * 类似于module函数，inject函数也是在window对象上的，为的是全局访问，所以也可以直接调用inject.
+ * 在这个测试中，就像在其他几乎所有单元测试中那样，我们想要保存当前工作对象实例的引用(在上面的例子中，保存的是scope)
+ * 那样，我们可以在整个it()子句中对这个对象引用进行操作。
+ */
+
+describe('myApp',function(){
+    var scope;
+    //模拟我们的'myApp' angular模块
+    beforeEach(angular.mock.module('myApp'));
+    beforeEach(angular.mock.inject(function($rootScope){
+        scope=$rootScope.$new();
+    }));
+    it('...')
+})
+
+/**
+ * 通常，我们会用将引用注入进测试时使用的名字来保存它。比如，如果我们在测试一个服务，
+ * 可以注入这个服务，然后把它的引用用一种稍微不同的命名方案存储起来。我们想在注入的服务
+ * 名称两端使用下划线，这样当它被注入时，注入器会忽略它的名称。
+ */
+
+describe('myApp',function(){
+    var myService;
+    //模拟我们的'myApp' angular模块
+    beforeEach(module('myApp'));
+    beforeEach(inject(function(_myService_){
+        myService=_myService_;
+    }));
+    it('...')
+})
+
+/**
+ * 模拟$httpBackend
+ * Angular也内置了$httpBackend模拟库，这样我们可以在应用中模拟任何外部的XHR请求，
+ * 避免在测试中创建昂贵的$http请求。
+ * 
+ * $httpBackend服务是一个假的HTTP后端实现，能让我们隔离和指定外部服务器可能处于的
+ * 条件，这样我们可以精确确定应用在不同条件下的行为。
+ * 
+ * 使用$httpBackend，我们可以校验一个请求的产生，对响应打桩、基于远程服务器的响应
+ * 来设置断言，用于校验对应用行为的期望。$httpBackend仅在单元测试中使用。
+ * 
+ * 在端到端测试中也可以用$httpBackend服务，但是这么做一般测不全整个应
+ * 用，因为没有使用真正的服务器。
+ * 
+ * 使用$httpBackend的测试可行是因为劫持了依赖注入链：我们注入了模拟的$httpBackend，
+ * 而不是使用$http服务产生实际HTTP请求的正版$httpBackend服务。这样就不需要为了支持测
+ * 试而修改应用。
+ * 
+ * 1. 冲刷HTTP请求
+ * 在生产中，$httpBackend异步响应请求，这在测试环境中基本很难配置。因而，我们需要
+ * 在测试的最后手动冲刷一切挂起的请求，这样才能清理仍然保持了$httpBackend异步行为的执
+ * 行环境。
+ * 
+ * $httpBackend带有两个方法，用于配置模拟的后端系统来处理HTTP响应，这两个方法是
+ * except和when，它们有不同的使用场景。
+ * 
+ * 通常，在一个单元测试中，我们要确保配置的所有请求最终都按照预期运行了，如果没有的
+ * 话就抛出异常。此外，还要确保每个测试结束时，不会仍有未结束的请求挂起。
+ * 
+ * 可以在一个afterEach块中用两个方法来处理这两种情况：
+ */
+
+//..
+afterEach(function(){
+    $httpBackend.verifyNoOutstandingExpectation();
+    $httpBackend.verifyNoOutstandingRequest();
+})
+
+/**
+ * 有的情况下，我们要重置所有已设置请求的预期。要在一个多阶段测试内部复用
+ * $httpBackend的同一实例时，会出现这种情况。
+ * 可以用resetException()方法来重置它们：
+ */
+
+//...
+it('should be a multiple-phase test', function () {
+    // ...
+    $httpBackend.resetExpectations();
+    // ...
+});
+
+/**
+ * 2.expect
+ * except方法建立了一个请求的期望，用于对应用产生的请求作出断言，也用于定义它们的响
+ * 应。如果预期的请求没有产生，或者不正确地产生了，测试就失败了。这些请求预期用于建立断
+ * 言：请求已被产生。
+ * 
+ * except方法带有两个必选参数、两个可选参数。
+ * 1)method：字符串HTTP方法，就像"GET"或者"POST"。
+ * 2)url：期望调用的HTTP URL或者是一个函数接受给定URL并返回一个标识它是否匹配的
+ * 布尔值。如果匹配它应该返回true，否则返回false。
+ * 3)data（可选）：HTTP请求的主体，或者是个函数，接受一个data字符串并且在data符合
+ * 预期时返回true（或者是一个用JSON格式发送HTTP主体的JavaScript对象）；
+ * 4)headers（可选）：HTTP头或者函数，该函数接收header对象作为参数，并且在headers
+ * 匹配预期时返回true。
+ * 
+ * except方法返回一个对象，该对象的respond方法用于控制在测试中如何处理匹配请求。
+ */
+describe('Remote tests', function () {
+    var $httpBackend, $rootScope, myService;
+    beforeEach(inject(function (_$httpBackend_, _$rootScope_, _myService_) {
+        $httpBackend = _$httpBackend_;
+        $rootScope = _$rootScope_;
+        // myService是一个服务
+        // 为我们产生HTTP调用
+        myService = _myService_;
+    }));
+    it('should make a request to the backend', function () {
+        // 建立一个预期
+        // myService会向路由发送一个GET请求
+        // /v1/api/current_user
+        $httpBackend.expect('GET', '/v1/api/current_user')
+            .respond(200, { userId: 123 });
+        myService.getCurrentUser();
+        // 冲刷请求很重要
+        $httpBackend.flush();
+    });
+})
+
+/**
+ * $httpBackend.expect方法带有几个帮助函数，让我们能更加具体地描述设置的预期。
+ * expectGET()为GET方法创建了一个新的请求预期，expectGET()带有两个参数。
+ * 
+ * url：一个HTTP URL或者接受URL的函数，并且该URL匹配当前定义时返回true。
+ * headers（可选）：HTTP头。
+ * $httpBackend.expectGET("/v1/api/current_user")
+ * 
+ * expectHEAD()为HEAD方法创建了一个新的请求预期。它带有两个参数。
+ * url：一个HTTP URL或者接受URL的函数，并且该URL匹配当前定义时返回true。
+ * headers（可选）：HTTP头。
+ * $httpBackend.expectHEAD("/v1/api/current_user")
+ * 
+ * expectJSONP()为JSONP请求创建了一个新的请求预期。它只带有一个参数。
+ * url：一个HTTP URL或者接受URL的函数，并且该URL匹配当前定义时返回true。
+ * $httpBackend.expectJSONP("/v1/api/current_user")
+ * 
+ * expectPATCH()为PATCH请求创建了一个新的请求预期。它接受三个参数。
+ * url：一个HTTP URL或者接受URL的函数，并且该URL匹配当前定义时返回true。
+ * data （可选）：HTTP请求的主体，或者是个函数，接受一个data字符串并且在data符合
+ * 预期时返回true，或者是一个用JSON格式发送HTTP主体的JavaScript对象。
+ * headers （可选）：HTTP头。
+ * $httpBackend.expectPATCH("/v1/api/current_user")
+ * 
+ * expectPOST()为POST请求创建了一个新的请求预期。它带有三个参数。
+ * url：一个HTTP URL或者接受URL的函数，并且该URL匹配当前定义时返回true。
+ * data （可选）：HTTP请求的主体，或者是个函数，接受一个data字符串并且在data符合
+ * 预期时返回true，或者是一个用JSON格式发送HTTP主体的JavaScript对象。
+ * headers（可选）： HTTP头。
+ * 
+ * $httpBackend.expectPOST("/v1/api/sign_up", {'userId': 1234});
+ * 
+ * expectPUT()为PUT请求创建了一个新的请求预期。它带有三个参数。
+ * url：一个HTTP URL或者接受URL的函数，并且该URL匹配当前定义时返回true。
+ * data （可选）：HTTP请求的主体，或者是个函数，接受一个data字符串并且在data符合
+ * 预期时返回true，或者是一个用JSON格式发送HTTP主体的JavaScript对象。
+ * headers ：（可选） HTTP头。
+ * $httpBackend.expectPUT("/v1/api/user/1234", {'name': 'Ari'});
+ * 
+ * expectDELETE()为DELETE请求创建了一个新的请求预期。它带有两个参数。
+ * url：一个HTTP URL或者接受URL的函数，并且该URL匹配当前定义时返回true。
+ * headers：（可选）HTTP头。
+ * $httpBackend.expectDELETE("/v1/api/user/123")
+ * 
+ * 
+ */
+
+/**
+ * 3.requestHandler
+ * 我们的expect()方法都会返回一个requestHandler对象，带有一个函数：respond。respond
+ * 方法让我们能给模拟的HTTP请求建立一个响应。
+ * requestHandler的response函数有两种形式。
+ * 第一种形式允许我们设置响应代码、响应数据、响应头，或者全部三项。
+ */
+
+// ...
+$httpBackend.expectGET("/v1/api/current_user")
+// 响应一个200状态代码
+// 还有主体“success”
+.respond(200, 'Success')
+// 或者只返回数据
+.respond("Fail")
+// 或者只有请求头
+.respond({'X-RESPONSE', 'Failure'});
+
+/**
+ * 4.when
+ * $httpBackend也有when方法，与expect方法不同，它压根就没有对请求创建预期。实际上，
+ * 它的目的主要是给应用创建一个假的后端，返回假数据。
+ * 
+ * 不同于预期，使用when()时，每个匹配URL的请求都会被一条when定义处理。此外，用expect
+ * 时，响应不是必须的，但用when时响应必须有。
+ * 
+ * 如果要建立对所有测试通用的后端定义，那么使用when()方法是非常棒的。（例如，当测试
+ * 一个使用了resolve属性的控制器时，它会依赖于外部数据的加载。）
+ * 
+ * when()函数带有两个必选参数和两个可选参数。
+ * 1)method：字符串HTTP方法，就像"GET"或者"POST"。
+ * 2)url：期望调用的HTTP URL。
+ * 3)data（可选）：HTTP请求的主体，或者是个函数，接受一个data字符串并且在data符合
+ * 预期时返回true，或者是一个用JSON格式发送HTTP主体的JavaScript对象。
+ * 4)headers（可选）：HTTP头或者函数，会接受header对象，并且在headers匹配预期时返
+ * 回true。
+ * 
+ * 类似于expect方法，我们也有同样的帮助方法让when的使用更具描述性。
+ * whenGET()为GET方法创建了一个新的后端定义，whenGET()带有两个参数。
+ * 1)url：一个HTTP URL。
+ * 2)headers（可选）：HTTP头。
+ * 
+ * whenHEAD()为HEAD方法创建了一个新的后端定义，whenHEAD()带有两个参数。
+ * 1)url：一个HTTP URL。
+ * 2)headers（可选）：HTTP头。
+ * 
+ * whenJSONP()为JSONP请求创建了一个新的后端定义。它只带有一个参数。
+ * 1)url：一个HTTP URL。
+ * 
+ * whenPOST()为POST请求创建了一个新的后端定义。它带有三个参数。
+ * 1)url ：一个HTTP URL。
+ * 2)data（可选）：HTTP请求的主体，或者是个函数，接受一个data字符串并且在data符合
+ * 预期时返回true，或者是一个用JSON格式发送HTTP主体的JavaScript对象。
+ * 3)headers：（可选） HTTP头。
+ * 
+ * whenPUT()为PUT请求创建了一个新的后端定义。它带有三个参数。
+ * 1)url：一个HTTP URL。
+ * 2)data （可选：HTTP请求的主体，或者是个函数，接受一个data字符串并且在data符合
+ * 3)headers （可选）：HTTP头。
+ * 
+ * whenDELETE()为DELETE请求创建了一个新的后端定义。它带有两个参数。
+ * 1)url：一个HTTP URL。
+ * 2)headers -（可选） HTTP头。
+ */
