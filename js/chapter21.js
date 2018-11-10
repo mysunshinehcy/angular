@@ -72,5 +72,113 @@
   */
 
   /**
+   * 事件监听
+   * 要监听一个事件，我们可以使用$on()方法。这个方法为具有某个特定名称的事件注册了一个
+   * 监听器。事件名称就是在Angular中触发的事件类型。
    * 
+   * 例如，我们可以在路由变更过程被触发时，监听事件
+   * scope.$on('$routeChangeStart',function(evt,next,current){//一个新的路由被触发了})
+   * 不管什么时候事件$routeChangeStart(路由将要变更的时候，会广播这个事件)被触发，
+   * 监听器(这个函数)都会被调用。
+   * 
+   * Angular把evt对象作为第一个参数传给正在监听的一切事件，不管它是我们自定义的事件还是内置的Angular服务。
    */
+
+
+   /**
+    * 事件对象
+    * 
+    * 1.targetScope(作用域对象)
+    * 这个属性是发送或者广播事件的作用域。
+    * 2.currentScope(作用域对象)
+    * 这个对象包含了当前处理事件的作用域。
+    * 3.name(字符串)
+    * 这个字符串是触发之后，我们正在处理的事件的名称
+    * 4.stopPropagation(函数)
+    * stopPropagation()函数取消通过$emit触发的事件的进一步传播
+    * 5.preventDefault(函数)
+    * preventDefault把defaultPrevente标志设置为true。尽管不能停止事件的传播，我们可以
+    * 告诉子作用域无需处理这个事件(也就是说，可以安全地忽略它们)。
+    * 6.defaultPrevented(布尔值)
+    * 调用preventDefault()会把defaultPrevented设置为true
+    * $on()函数返回了一个反注册函数，我们可以调用它来取消监听器。
+    */
+
+    /**
+     * 事件相关的核心服务
+     * 
+     * Angular核心框架发送事件，我们监听之后执行操作。可以用事件让自己的Angular
+     * 对象能在全局事件的不同状态上与应用交互。
+     * 
+     * 我们用$emit()调用的有好几个事件，它们把事件往上发，更多调用的是$broadcast()事件。
+     */
+
+/**
+ * 核心系统的$emitted事件
+ * 
+ * 下面的事件从指令向上发送到包含指令调用的作用域。我们可以使用$on()在这个链网上的
+ * 任意作用域里监听这些方法
+ * 
+ * $scope.$on('$includeContentLoaded',function(evt){})
+ * 
+ * 1.$includeContentLoaded
+ * $includeContentLoaded事件当ngInclude的内容重新加载时，从ngInclude指令上触发。
+ * 2.$includeContentRequested
+ * $includeContentRequested事件从调用ngInclude的作用域上发送。每次ngInclude的内容
+ * 被请求时，它都会被发送。
+ * 3.$viewContentLoaded
+ * $vieContentLoaded事件每当ngView内容被重新加载时，从当前ngView作用域上发送。
+ */
+
+ /**
+  * 核心系统的$broadcast事件
+  * 1.$locationChangeStart
+  * 当Angular从$location服务(通过$location.path()、$location.search()等)对浏览器
+  * 的地址作更新，会触发$locationChangeStart事件
+  * 
+  * 2.$locationChangeSuccess
+  * 当且仅当浏览器的地址成功变更，又名义做阻止$locationChangeStart的情况下，
+  * $locationChangeSuccess事件会从$rootScope上广播出来。
+  * 
+  * 3.$routeChangeStart
+  * 在路由变更发生之前，$routeChangeStart事件从$rootScope发送出来。也就是在路由服务
+  * 开始解析路由变更所需的所有依赖项时。
+  * 这个过程通常涉及获取视图模板和解析route属性上所有依赖项的时候。
+  * 
+  * 4. $routeChangeSuccess
+  * 在所有路由依赖项跟着$routeChangeStart 被解析之后， $routeChangeSuccess 被从
+  * $rootScope上广播出来。
+  * ngView指令使用$routeChangeSuccess事件来获悉何时实例化控制器并渲染视图。
+  * 
+  * 5. $routeChangeError
+  * 如果路由对象上任意的resolve属性被拒绝了，$routeChangeError就会被触发（比如它们失
+  * 败了）。这个事件是从$rootScope上广播出来的。
+  * 
+  * 6. $routeUpdate
+  * 如果$routeProvider上的reloadOnSearch属性被设置成false，并且使用了控制器的同一个
+  * 实例，$routeUpdate事件会被从$rootScope上广播。
+  * 
+  * 7. $destroy
+  * 在作用域被销毁之前，$destroy事件会在作用域上广播。这个顺序给子作用域一个机会，在
+  * 父作用域被真正移除之前清理自身。
+  * 
+  * 例如，如果我们在控制器中有一个正在运行的$timeout，我们不希望在包含它的控制器已经
+  * 不存在的情况下，它还继续触发。
+  */
+
+  angular.module('myApp',[]).controller('MainController',function($scope,$timeout){
+      var timer;
+      var updateTime=function(){
+          $scope.date=new Date();
+          timer=$timeout(updateTime,1000);
+      }
+      //开始更新事件
+      timer=$timeout(updateTime,1000);
+      //在销毁控制器之前
+      //清除定时器
+      $scope.$on('$destory',function(){
+          if(timer){
+              $timeout.cancel(timer);
+          }
+      })
+  })
