@@ -785,7 +785,7 @@ $httpBackend.expectGET("/v1/api/current_user")
 // 或者只返回数据
 .respond("Fail")
 // 或者只有请求头
-.respond({'X-RESPONSE', 'Failure'});
+//.respond({'X-RESPONSE', 'Failure'});
 
 /**
  * 4.when
