@@ -14,13 +14,23 @@
             -webkit-transition: 2s linear all;
         }
 
-        .fade-in:hover {
+        /*.fade-in:hover {
             width: 300px;
             height: 300px;
+        }*/
+
+        .fade-in:hover{
+            -webkit-animation: 2s firstAnimation;
+            animation: 2s firstAnimation;
         }
 
-        .fade-in.ng-enter {
+        /*.fade-in.ng-enter {
             opacity: 0;
+        }*/
+
+        .fade-in.ng-enter{
+         -webkit-animation: 2s firstAnimation;
+         animation: 2s firstAnimation;   
         }
 
         .fade-in.ng-enter.ng-enter-active {
@@ -29,6 +39,27 @@
 
         .fade-in.ng-leave.ng-leave-active {
             opacity: 0
+        }
+
+        @keyframes firstAnimation{
+            0% {
+                color: yellow;
+            }
+            100% {
+                color: black;
+            }
+        }
+
+        /*对于Chrome和Safari浏览器*/
+        @-webkit-keyframes firstAnimation{
+            /*from等于0%*/
+            from {
+                color: yellow;
+            }
+            /*to等于100% */
+            to{
+                color: black;
+            }
         }
     </style>
 </head>
