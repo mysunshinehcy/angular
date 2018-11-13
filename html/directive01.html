@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+
+<head>
+    <script type="text/javascript" src="../3rdlib/angular.js"></script>
+    <script type="text/javascript" src="../3rdlib/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="button.js"></script>
+    <link rel="stylesheet" type="text/css" href="button.css">
+</head>
+
+<body>
+    <div ng-controller="Ctrl">
+        <!-- <my-button id="btn" text="myText" listeners="myListeners" ></my-button> -->
+        <div class="my-button" id="btn" text="myText" listeners="myListeners"></div>
+    </div>
+    <script type="text/javascript">
+    var Ctrl = function($scope) {
+        debugger;
+        scope = $scope;
+        $scope.myText = "11";
+        $scope.myListeners = {
+            "click": function() {
+                console.log("click")
+            },
+            "mouseover": function() {
+                console.log("mouseover")
+            },
+            "mouseout": function() {
+                console.log("mouseout")
+            },
+            "mouseup": function() {
+                console.log("mouseup")
+            },
+            "mousedown": function() {
+                console.log("mousedown")
+            }
+        }
+        
+        $("#selectid1").bind("click", function() {
+            var start;
+            setInterval(function() {
+            end = new Date();
+            console.log(end.getTime())                
+        }, 1000)
+           
+        })
+        
+    }
+    </script>
+</body>
+
+</html>
