@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html ng-app>
+    <head>
+        <script type="text/javascript" src="../3rdlib/angular.js"></script>
+        <script type="text/javascript" src="../3rdlib/jquery-1.11.1.min.js"></script>
+    </head>
+    <body>
+        <div ng-controller="Ctrl1">
+            Hello <input ng-model='name'>
+            <hr/>
+            &ltspan ng:bind="name"&gt<span ng:bind="name"></span>
+            <br/>
+            &ltspan ng_bind="name"&gt<span ng_bind="name"></span>
+            <br/>
+            &ltspan ng-bind="name"&gt<span ng-bind="name"></span>
+            <br/>
+            &ltspan data-ng-bind="name"&gt<span data-ng-bind="name"></span>
+            <br/>
+            &ltspan x-ng-bind="name"&gt<span x-ng-bind="name"></span>
+            <br/>
+        </div>
+        <script type="text/javascript">
+            
+            function Ctrl1($scope) {
+                $scope.name = 'angular';
+            }
+
+        </script>
+    </body>
+</html>
