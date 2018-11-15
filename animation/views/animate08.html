@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Animate</title>
+    <script src="../bower_components/angular/angular.min.js"></script>
+    <script src="../bower_components/angular-animate/angular-animate.min.js"></script>
+    <style type="text/css">
+       @keyframes animateSwitch-enter{
+           from{
+               opacity: 0;
+           }
+           to{
+               opacity: 1;
+               color: green;
+           }
+       }
+       @-webkit-keyframes animateSwitch-enter{
+           from{
+               opacity: 0;
+           }
+           to{
+               opacity: 1;
+               color: green;
+           }
+       }
+       @keyframes animateSwitch-leave{
+           from{
+               opacity: 1;
+           }
+           to{
+               opacity: 0;
+               color: black;
+           }
+       }
+       @-webkit-keyframes animateSwitch-leave{
+           from{
+               opacity: 1;
+           }
+           to{
+               opacity: 0;
+               color: black;
+           }
+       }
+       .animateSwitch.ng-enter{
+           -webkit-animation: 2s animateSwitch-enter;
+           animation: 2s animateSwitch-enter;
+       }
+       .animateSwitch.ng-leave{
+           -webkit-animation: 2s animateSwitch-leave;
+           animation: 2s animateSwitch-leave;
+       }
+    </style>
+</head>
+
+<body>
+    <div ng-init="template='home'" ng-controller="HomeController">
+        <button ng-click="template='home'">Home</button>
+        <button ng-click="template='second'">Second</button>
+        <button ng-click="template='third'">Third</button>
+        <div ng-switch="template">
+            <div class="animateSwitch" ng-switch-when="home">
+                <h1>Home</h1>
+            </div>
+            <div class="animateSwitch" ng-switch-when="second">
+                <h1>Second</h1>
+            </div>
+            <div class="animateSwitch" ng-switch-when="third">
+                <h1>third</h1>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var myApp = angular.module('myApp', ['ngAnimate']);
+        myApp.controller('HomeController', function ($scope) {
+            
+        })
+    </script>
+</body>
+
+</html>
