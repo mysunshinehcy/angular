@@ -34,13 +34,17 @@
                             $(ele).animate({
                                 'font-size': '50px'
                             }, 2000, done)
+                        }else{
+                            done()
                         }
                     },
-                    removeClass: function (ele, claName, done) {
+                    removeClass: function (ele, clsName, done) {
                         if (clsName === 'grown') {
                             $(ele).animate({
                                 'font-size': '16'
                             }, 2000, done)
+                        }else{
+                            done()
                         }
                     }
                 }
