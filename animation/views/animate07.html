@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Animate</title>
+    <script src="../bower_components/angular/angular.min.js"></script>
+    <script src="../bower_components/angular-animate/angular-animate.min.js"></script>
+    <style type="text/css">
+        .animateSwitch.ng-enter,.animateSwitch.ng-leave{
+            transition: 50s linear all;
+            -webkit-transition: 50s linear all;
+        }
+        .animateSwitch.ng-enter{
+            /*进入后的初始化状态*/
+            opacity: 0.5;
+            color: green
+        }
+        .animateSwitch.ng-enter.ng-enter-active{
+            /*进入后的结束状态*/
+           opacity: 1;
+           color: yellow;
+        }
+        .animateSwitch.ng-leave {
+            /*离开后的初始化状态*/
+            color: red;
+        }
+        .animateSwitch.ng-leave.ng-leave-active {
+            /*离开后的结束状态*/
+            opacity: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div ng-init="template='home'" ng-controller="HomeController">
+        <button ng-click="template='home'">Home</button>
+        <button ng-click="template='second'">Second</button>
+        <button ng-click="template='third'">Third</button>
+        <div ng-switch="template">
+            <div class="animateSwitch" ng-switch-when="home">
+                <h1>Home</h1>
+            </div>
+            <div class="animateSwitch" ng-switch-when="second">
+                <h1>Second</h1>
+            </div>
+            <div class="animateSwitch" ng-switch-when="third">
+                <h1>third</h1>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var myApp = angular.module('myApp', ['ngAnimate']);
+        myApp.controller('HomeController', function ($scope) {
+            
+        })
+    </script>
+</body>
+
+</html>
