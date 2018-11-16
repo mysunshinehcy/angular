@@ -274,3 +274,16 @@ angular.module('myApp',['ngAnimate']).directive('myDirective',function($animate)
         }
     }
 })
+
+
+// 1536-0694
+
+// 7Ga+O4EDJshK97jKYYGsxL37J3tVaCBjygk4tKLCnZKwSUPp1ipbKzRiO
+// 9oPSurXQQZ7Mpeo5neTXJESU0dvCjQDKG8ugD66N+hr-vy+KZiaHQ+wKW
+// BaloIJlucyiDIGuWTzWXjDlZf6Q4BlB3ubm5cLSk0QrKCtLYMOBhh42Z2
+
+// 9359-4830
+
+// -deRRlIQsVS-m1ID0UQxNz178K3oOcheTlgWqnIgN4tukjfBPzqLePaox
+// R2+kOHsAvEx6YQUowGtk-hxGQkrN97YPRdB9-RF3rCxhGw+r3qch1O7w-
+// jJXlIgwNEwDiEx6G6uCUngfgNowbOXAgKlT12h3OVcv447K74ysqUD1WQ
