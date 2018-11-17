@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="angularTranslateApp',">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Animate</title>
+    <script src="../bower_components/angular/angular.min.js"></script>
+    <script src="../bower_components/angular-translate/angular-translate.min.js"></script>
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body>
+    <div ng-controller="DemoController">
+        <h2>{{'HEADLINE' | translate }}</h2>
+        <p>{{'INTRO_TEXT' | translate}}</p>
+    </div>
+    <script type="text/javascript">
+        var app = angular.module('angularTranslateApp', ['pascalprecht.translate']);
+        app.config(function ($translateProvider) {
+            $translateProvider.translations({
+                HEADLINE: 'Hello there, This is my awesome app!',
+                INTRO_TEXT: 'And it has i18n support!'
+            });
+        });
+        app.controller('DemoController', function ($scope) {
+
+        })
+    </script>
+</body>
+
+</html>
