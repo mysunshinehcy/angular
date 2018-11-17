@@ -16,26 +16,18 @@
 <body>
     <div ng-controller="DemoController">
         <form name="form">
-          <input type="text"
-                 name="name"
-                 placeholder="Your name"
-                 ui-event="{focus: 'showNameHelp=true',
-                            blur: 'showNameHelp=false'}"
-          />
-          <span ng-show="showNameHelp">Please Enter Your Name</span>
-          <br>
-          <input type="email"
-                 name="email"
-                 placeholder="Your email"
-                 ui-event="{focus: 'showEmailHelp=true',
-                            blur: 'showEmailHelp=false'}"
-          />
-          <span ng-show="showEmailHelp">Please Enter Your Email</span>
+            <input type="text" name="name" placeholder="Your name" ui-event="{focus: 'showNameHelp=true',
+                            blur: 'showNameHelp=false'}" />
+            <span ng-show="showNameHelp">Please Enter Your Name</span>
+            <br>
+            <input type="email" name="email" placeholder="Your email" ui-event="{focus: 'showEmailHelp=true',
+                            blur: 'showEmailHelp=false'}" />
+            <span ng-show="showEmailHelp">Please Enter Your Email</span>
         </form>
-      </div>
+    </div>
     <script type="text/javascript">
-        angular.module('myApp',['ui.event']).controller('DemoController',function($scope){
-            
+        angular.module('myApp', ['ui.event']).controller('DemoController', function ($scope) {
+
         })
     </script>
 </body>
