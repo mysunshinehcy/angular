@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Animate</title>
+    <script src="../bower_components/angular/angular.min.js"></script>
+    <script src="../bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body>
+    <div ng-controller="DemoController">
+        <div ui-view></div>
+        <div>
+            <div ui-view="filters"></div>
+            <div ui-view="mailbox"></div>
+            <div ui-view="priority"></div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        angular.module('myApp', ['ui.router']).config(function ($stateProvider, $urlRouterProvider) {
+            $stateProvider.state('start', {
+                    url: '/start',
+                    templateUrl: 'partals/start.html'
+                })
+                .state('home', {
+                    template: '<h1>Hello {{name}}</h1>',
+                    resolve: {
+                        //当结果不是promise时立即返回
+                        person: function () {
+                            return {
+                                name: 'Ari',
+                                email: 'ari@fullstack.io'
+                            }
+                        },
+                        //这个函数返回一个promise，它会在控制器实例化之前解析
+                        currentDetails: function ($http) {
+                            return $http({
+                                method: 'JSONP',
+                                url: '/current_details'
+                            });
+                        },
+                        //还可以在另一个解析中使用上面返回的promise
+                        facebookId: function ($http, current_details) {
+                            $http({
+                                method: 'GET',
+                                url: 'http://facebook.com/api/current_user',
+                                params: {
+                                    email: current_details.data.emails[0]
+                                }
+                            });
+                        }
+                    },
+                    controller: function ($scope, person, current_details, facebookId) {
+                        $scope.person = person;
+                    }
+                })
+                .state('inbox', {
+                    url: '/inbox:inboxId',
+                    template: '<div><h1>Welcome to your inbox</h1>\
+                          <a ui-sref="inbox.priority">Show priority</a>\
+                          <div ui-view></div>\
+                          </div>',
+                    controller: function ($scope, $stateParams) {
+                        $scope.inboxId = $stateParams.inboxId;
+                    }
+                })
+                .state('inbox.priority', {
+                    url: '/priority',
+                    template: '<h2>Your priority inbox</h2>'
+                })
+                .state('inbox', {
+                    views: {
+                        'filters': {
+                            template: '<h4>Filter inbox</h4>',
+                            controller: function ($scope) {
+
+                            }
+                        },
+                        'mailbox': {
+                            template: 'partials/mailbox.html'
+                        },
+                        'priority': {
+                            template: '<h4>Priority inbox</h4>',
+                            resolve: {
+                                facebook: function () {
+                                    return FB.messages();
+                                }
+                            }
+                        }
+                    }
+                })
+                .state('admin',{
+                    abstract:true,
+                    url:'/admin',
+                    template:'<div ui-view></div>'
+                })
+                .state('admin.index',{
+                    url:'/index',
+                    template:'<h3>Admin index</h3>'
+                })
+                .state('admin.users',{
+                    url:'/users',
+                    template: '<ul>...</ul>'
+                })
+        })
+        .controller('DemoController', function ($scope) {
+
+        })
+    </script>
+</body>
+
+</html>
