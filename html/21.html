@@ -36,7 +36,7 @@
                 }
             });
             $scope.runJs = function () {
-                //放止email.jsBody为undefined的时候出现Cannot read property 'jsBody' of undefined报错
+                //防止email.jsBody为undefined的时候出现Cannot read property 'jsBody' of undefined报错
                 if (!$scope.email) {
                     return;
                 }
