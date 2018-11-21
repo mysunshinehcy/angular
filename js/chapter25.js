@@ -68,3 +68,13 @@ app.use(function(req,res,next){
         res.send(404);
     }
 })
+
+/**
+ * 使用Nginx代理URL
+ * 如果使用Nginx为Angular应用提供服务，并且在查询字符串中有一个_escaped_fragment_参数，那
+ * 也可以添加一些配置以便提供应用的快照。
+ * 
+ * 和Apache不同，Nginx无需启动什么模块，因此可以简单地更新配置来处理替换文件路径的问题。
+ * 在Nginx配置文件中(比如/etc/nginx/nginx.conf)，需要确保配置信息看起来像这样
+ */
+
