@@ -10,3 +10,17 @@ angular.module('myApp', [])
         //启动更新函数
         updateTime();
     })
+    .provider('Weather', function () {
+        console.log(this);
+        var apiKey = "";
+        this.setApiKey = function (key) {
+            if (key) {
+                this.apiKey = key;
+            }
+        };
+        this.$get = function ($http) {
+            return {
+                //服务对象
+            }
+        }
+    })
