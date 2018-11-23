@@ -6,6 +6,19 @@
     font-size: 6.1em;
 }
 
-#datetime h2{
+#datetime h2 {
     font-size: 1.0em;
+}
+
+#forcast ul li {
+    font-size: 4.5em;
+    text-align: center;
+}
+
+#forcast ul li h3 {
+    font-size: 1.4em;
+}
+
+#forecast ul li .today h3 {
+    font-size: 1.8em;
 }
