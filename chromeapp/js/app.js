@@ -36,7 +36,8 @@ angular.module('myApp', ['ngRoute'])
                     var d = $q.defer();
                     $http({
                         method: 'GET',
-                        url: self.getUrl("forecast", city),
+                        //url: getUrl.call(this,"forecast", city),
+                        url:self.getUrl("forecast", city),
                         cache: true
                     }).success(function (data) {
                         //Wunderground API返回
