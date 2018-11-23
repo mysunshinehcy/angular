@@ -16,6 +16,9 @@ angular.module('myApp', ['ngRoute'])
             $scope.weather.forcast = data;
         })
     })
+    .controller('SettingsController',function($scope){
+        
+    })
     .provider('Weather', function () {
         var apiKey = "";
         this.setApiKey = function (key) {
@@ -55,4 +58,18 @@ angular.module('myApp', ['ngRoute'])
         //此处YOUR_API_KEY赋值为7528801ea9a07daa
         //WeatherProvider.setApiKey('YOUR_API_KEY');
         WeatherProvider.setApiKey('7528801ea9a07daa');
+    })
+    .config(function ($routeProvider) {
+        $routeProvider
+            .when('/', {
+                templateUrl:'templates/home.html',
+                controller:'MainController'
+            })
+            .when('/',{
+                templateUrl:'templates/settings.html',
+                controller:'SettingsController'
+            })
+            .otherwise({
+                redirectTo:'/'
+            })
     })
