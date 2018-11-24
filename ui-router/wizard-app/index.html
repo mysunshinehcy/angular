@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="wizardApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Animate</title>
+    <script src="../bower_components/angular/angular.min.js"></script>
+    <script src="../bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body>
+    <div ng-controller="WizardSignupController">
+        <h2>Signup wizard</h2>
+        <div ui-view></div>
+    </div>
+    <script type="text/javascript">
+        angular.module('wizardApp', ['ui.router', 'wizardapp.controllers']).config(function ($stateProvider,
+            $urlRouterProvider) {
+            $stateProvider.state('start', {
+                    url: '/step1',
+                    templateUrl: 'partials/wizard/step_1.html'
+                })
+                .state('email', {
+                    url: '/step_2',
+                    templateUrl: 'partials/wizard/step_2.html'
+                })
+                .state('finish', {
+                    url: '/finish',
+                    templateUrl: 'partials/wizard/step_3.html'
+                })
+                .state('izard', {
+                    abstract: true,
+                    url: '/wizard',
+                    template: '<div><div ui-view></div></div>'
+                })
+                .state('wizard.start', {
+                    url: '/step_1',
+                    templateUrl: 'partials/wizard/step_1.html'
+                })
+                .state('wizard.email', {
+                    url: '/step_2',
+                    templateUrl: 'partials/wizard/step_2.html'
+                })
+                .state('wizard.finish', {
+                    url: '/finish',
+                    templateUrl: 'partials/wizard/step_3.html',
+                    controller: function ($scope) {
+                        $scope.signup();
+                    }
+                });
+        });
+        angular.module('wizardapp.controllers', []).controller('WizardSignupController', function ($scope, $state) {
+            $scope.user = {};
+            $scope.signup = function () {}
+        })
+    </script>
+</body>
+
+</html>

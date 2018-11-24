@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Animate</title>
+    <script src="../bower_components/angular/angular.min.js"></script>
+    <script src="../bower_components/angular-animate/angular-animate.min.js"></script>
+    <script src="../bower_components/jquery/jquery-1.6.2.min.js"></script>
+    <style type="text/css">
+      .animateMe.ng-hide-add,.animateMe.ng-hide-remove{
+          transition: 10s linear all;
+          -webkit-transition: 10s linear all;
+      }
+      .animateMe.ng-hide-add{
+          opacity: 1
+      }
+
+      .animateMe.ng-hide-add.ng-hide-add-active{
+          opacity: 0;
+      }
+      .animateMe.ng-hide-remove{
+          opacity: 0;
+      }
+      .animateMe.ng-hide-remove.ng-hide-remove-active{
+          opacity: 1
+      }
+    </style>
+</head>
+
+<body>
+    <div ng-init="show=false" ng-controller="HomeController">
+        <button ng-click="show=!show">Show</button>
+        <div ng-show="show" class="animateMe">
+            <h2>Show me</h2>
+        </div>
+    </div>
+    <script type="text/javascript">
+        angular.module('myApp', ['ngAnimate'])
+            .controller('HomeController', function ($scope) {
+                
+            })
+    </script>
+</body>
+
+</html>

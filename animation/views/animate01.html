@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app>
+<html lang="en" ng-app="myApp">
 
 <head>
     <meta charset="UTF-8">
@@ -14,13 +14,23 @@
             -webkit-transition: 2s linear all;
         }
 
-        .fade-in:hover {
+        /*.fade-in:hover {
             width: 300px;
             height: 300px;
+        }*/
+
+        .fade-in:hover{
+            -webkit-animation: 2s firstAnimation;
+            animation: 2s firstAnimation;
         }
 
-        .fade-in.ng-enter {
+        /*.fade-in.ng-enter {
             opacity: 0;
+        }*/
+
+        .fade-in.ng-enter{
+         -webkit-animation: 2s firstAnimation;
+         animation: 2s firstAnimation;   
         }
 
         .fade-in.ng-enter.ng-enter-active {
@@ -30,11 +40,60 @@
         .fade-in.ng-leave.ng-leave-active {
             opacity: 0
         }
+
+        @keyframes firstAnimation{
+            0% {
+                color: yellow;
+            }
+            100% {
+                color: black;
+            }
+        }
+
+        /*对于Chrome和Safari浏览器*/
+        @-webkit-keyframes firstAnimation{
+            /*from等于0%*/
+            from {
+                color: yellow;
+            }
+            /*to等于100% */
+            to{
+                color: black;
+            }
+        }
+
+        .fade-in.ng-enter-stagger{
+            -webkit-animation-delay:200ms;
+            animation-delay:200ms;
+            /* css交错动画需要放在这里 */
+            -webkit-animation-duration:0;
+            animation-duration:0;
+        }
     </style>
 </head>
 
-<body>
+<body ng-controller="MyController">
     <div class="fade-in">22</div>
+    <div ng-repeat="item in items" class="fade-in">
+        Item: #1 -- {{ item }}
+    </div>
+    <script type="text/javascript">
+        var myApp = angular.module('myApp', []);
+        myApp.controller('MyController', function ($scope) {
+            $scope.items = [
+                "菜鸟教程1",
+                "菜鸟教程2",
+                "菜鸟教程3",
+                "菜鸟教程4",
+                "菜鸟教程5",
+                "菜鸟教程6",
+                "菜鸟教程7",
+                "菜鸟教程8",
+                "菜鸟教程9",
+                "菜鸟教程10",
+            ]
+        })
+    </script>
 </body>
 
 </html>

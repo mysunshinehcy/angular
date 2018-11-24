@@ -1,0 +1,27 @@
+.buttonDefault{
+
+	display: inline-block;
+    vertical-align: top;
+    height: 26px;
+    line-height: 26px;
+    white-space: nowrap;
+    outline: 0;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    padding: 0 19px;
+    border: 1px solid #d3d3d3;
+    border-radius: 6px;
+    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    background: #fafafa;
+    background: -moz-linear-gradient(top,#fff,#fafafa);
+    background: -webkit-gradient(linear,left top,left bottom,color-stop(0,#fff),color-stop(100%,#fafafa));
+    background: -webkit-linear-gradient(top,#fff,#fafafa);
+    background: linear-gradient(to bottom,#fff,#fafafa);
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    color: #000;
+    font-size: 12px;
+    font-family: Helvetica
+}

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Animate</title>
+    <script src="../bower_components/angular/angular.min.js"></script>
+    <script src="../bower_components/angular-animate/angular-animate.min.js"></script>
+    <style type="text/css">
+        @keyframes fadein-enter-animation{
+            from {
+                opacity: 0;
+                color: green;
+            }
+            to{
+                opacity: 1;
+                color: black;
+            }
+        }
+        @-webkit-keyframes fadein-enter-animation{
+            from{
+                opacity: 0;
+                color: green
+            }
+            to{
+                opacity: 1;
+                color: green
+            }
+        }
+        @keyframes fadein-leave-animation{
+            from{
+                opacity: 1;
+                color: black
+            }
+            to{
+                opacity: 0;
+            }
+        }
+        @-webkit-keyframes fadein-leave-animation{
+            from{
+                opacity: 1;
+                color: black;
+            }
+            to{
+                opacity: 0;
+            }
+        }
+        .fadein.ng-enter,.fadein.ng-leave{
+            -webkit-animation: 2s fadein-enter-animation;
+            -moz-animation: 2s fadein-enter-animation;
+            -o-animation:2s fadein-enter-animation;
+            animation:2s fadein-enter-animation
+        }
+        .fadein.ng-enter{
+            opacity: 0;
+            color:green;
+        }
+        .fadein.ng-enter.ng-enter-active{
+            opacity: 1;
+            color: black;
+        }
+        .fadein.ng-leave{
+
+        }
+        .fadein.ng-leave.ng-leave-active{
+            opacity: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div ng-controller="HomeController">
+        <ul>
+            <li class="fadein" ng-repeat="r in roommates">
+                {{r}}
+            </li>
+        </ul>
+    </div>
+    <script type="text/javascript">
+        var myApp = angular.module('myApp', ['ngAnimate']);
+        myApp.controller('HomeController', function ($scope) {
+            $scope.roommates = ['Ari', 'Q', 'Sean', 'Anand'];
+            setTimeout(function () {
+                $scope.roommates.push('Ginger');
+                $scope.$apply();//触发一次digest，否则视图不更新
+
+                setTimeout(function () {
+                    $scope.roommates.shift();
+                    $scope.$apply();//触发digest
+                }, 2000)
+            }, 1000)
+        })
+    </script>
+</body>
+
+</html>

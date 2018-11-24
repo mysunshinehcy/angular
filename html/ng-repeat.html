@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html ng-app>
+    <head>
+        <script type="text/javascript" src="../3rdlib/angular.js"></script>
+        <script type="text/javascript" src="../3rdlib/jquery-1.11.1.min.js"></script>
+    </head>
+    <body>
+        <div ng-init="list = ['Chrome', 'Safari', 'Firefox', 'IE'] ">
+            <input ng-model="list">
+            <br>
+            <input ng-model="list">
+            <br>
+            <pre>list={{list}}</pre>
+            <br>
+            <ol>
+                <li ng-repeat="item in list">{{item}}</li>
+            </ol>
+            <div ng-repeat="item in list">{{item}}</div>
+        </div>
+    </body>
+</html>

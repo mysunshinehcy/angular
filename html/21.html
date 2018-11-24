@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../lib/angular.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="../css/foundation.min.css" />
+</head>
+
+<body>
+    <div ng-controller="MyController">
+        <textarea ng-model="email.rawHtml"></textarea>
+        <pre ng-bind-html="email.htmlBody"></pre>
+        <textarea ng-model="email.rawJs"></textarea>
+        <pre ng-bind="email.jsBody"></pre>
+        <button ng-click="runJs()">Run</button>
+    </div>
+    <script type="text/javascript">
+        angular.module('myApp', []).controller('MyController', ['$scope', '$sce', function ($scope, $sce) {
+            //在email.raHtml上设置监控
+            $scope.$watch('email.rawHtml', function (v) {
+                //假设在非编译($compile)阶段
+                if (v) {
+                    //将htmlBody渲染为受信任的HTML
+                    $scope.email.htmlBody = $sce.trustAsHtml($scope.email.rawHtml);
+                }
+            });
+            // 在email.rawJs上设置监控
+            $scope.$watch('email.rawJs', function (v) {
+                if (v) {
+                    $scope.email.jsBody = $sce.trustAsJs($scope.email.rawJs);
+                }
+            });
+            $scope.runJs = function () {
+                //防止email.jsBody为undefined的时候出现Cannot read property 'jsBody' of undefined报错
+                if (!$scope.email) {
+                    return;
+                }
+                eval($scope.email.jsBody.toString());
+            }
+        }])
+    </script>
+</body>
+
+</html>

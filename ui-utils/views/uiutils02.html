@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Animate</title>
+    <script src="../bower_components/angular/angular.min.js"></script>
+    <script src="../bower_components/angular-ui-event/src/event.js"></script>
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body>
+    <div ng-controller="DemoController">
+        <form name="form">
+            <input type="text" name="name" placeholder="Your name" ui-event="{focus: 'showNameHelp=true',
+                            blur: 'showNameHelp=false'}" />
+            <span ng-show="showNameHelp">Please Enter Your Name</span>
+            <br>
+            <input type="email" name="email" placeholder="Your email" ui-event="{focus: 'showEmailHelp=true',
+                            blur: 'showEmailHelp=false'}" />
+            <span ng-show="showEmailHelp">Please Enter Your Email</span>
+        </form>
+    </div>
+    <script type="text/javascript">
+        angular.module('myApp', ['ui.event']).controller('DemoController', function ($scope) {
+
+        })
+    </script>
+</body>
+
+</html>

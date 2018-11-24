@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Animate</title>
+    <script src="../bower_components/angular/angular.min.js"></script>
+    <script src="../bower_components/angular-touch/angular-touch.min.js"></script>
+    <style type="text/css">
+
+    </style>
+</head>
+
+<body>
+    <div ng-controller="DemoController">
+        <ul>
+            <li ng-repeat="main in emails">
+                <div ng-show="!mail.showActions" ng-swipe-left="mail.showActions=true">
+                    <div class="from">
+                        From: <span>{{ mail.from }}</span>
+                    </div>
+                    <div class="body">
+                        {{ mail.body }}
+                    </div>
+                </div>
+                <div ng-show="mail.showActions" ng-swipe-right="mail.showActions=false">
+                    <ul class="actions">
+                        <li><button>Archive</button></li>
+                        <li><button>Trash</button></li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <script type="text/javascript">
+        angular.module('myApp', ['ngTouch']).controller('DemoController', function ($scope) {
+
+        }).directive('mySlideController', ['$swipe', function ($swipe) {
+            return {
+                restrict: 'EA',
+                link: function (scope, ele, attrs, ctrl) {
+                    var startX, pointX;
+                    $swipe.bind(ele, {
+                        'start': function (coords) {
+                            startX = coords.x;
+                            pointX = coords.y;
+                        },
+                        'move': function (coords) {
+                            var delta = coords.x - pointX;
+                            // ...
+                        },
+                        'end': function (coords) {
+                            // ...
+                        },
+                        'cancel': function (coords) {
+                            // ...
+                        }
+                    })
+                }
+            }
+        }])
+    </script>
+</body>
+
+</html>
