@@ -40,15 +40,15 @@ angular.module('myApp', ['ngRoute'])
         //构建date对象
         //https://blog.csdn.net/zangxueyuan88/article/details/81100054
         $scope.date = {};
+        console.log($scope.date);
         //更新函数
         var updateTime = function () {
-            $scope.date.raw = new Date();
+            $scope.date.tz = new Date();
             $timeout(updateTime, 1000);
         }
         //启动更新函数
         updateTime();
         $scope.weather = {};
-        console.log($scope.weather);
         Weather.getWeatherForecast("autoip").then(function (data) {
             $scope.weather.forcast = data;
         })
