@@ -1,21 +1,21 @@
 #datetime {
-    text-align: center;
+    text-align: center
 }
 
 #datetime h1 {
-    font-size: 6.1em;
+    font-size: 6.1em
 }
 
 #datetime h2 {
-    font-size: 1.0em;
+    font-size: 1.0em
 }
 
-#forcast ul li {
+#forecast ul li {
     font-size: 4.5em;
     text-align: center;
 }
 
-#forcast ul li h3 {
+#forecast ul li h3 {
     font-size: 1.4em;
 }
 

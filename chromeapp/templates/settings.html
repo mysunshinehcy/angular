@@ -1,3 +1,10 @@
-<div>
-    <div>test</div>
-</div>
+<h2>Settings</h2>
+<form ng-submit="save()">
+    <input type="text" 
+           ng-model="user.location"
+           timezone="user.timezone"
+           auto-fill="fetchCities" 
+           autocomplete="off" 
+           placeholder="Location" />
+    <input type="submit" class="btn btn-primary" value="Save" />
+</form>

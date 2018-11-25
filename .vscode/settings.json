@@ -1,3 +1,7 @@
 {
     "git.ignoreLimitWarning": true
 }
+
+{
+    'open-in-browser.default':'Chrome'
+}
