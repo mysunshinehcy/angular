@@ -68,7 +68,7 @@ angular.module('myApp', ['ngRoute'])
         service.restore();
         return service;
     })
-    .controller('MainController', function ($scope, $timeout, Weather,UserService) {
+    .controller('MainController', function ($scope, $timeout, Weather, UserService) {
         //构建date对象
         //https://blog.csdn.net/zangxueyuan88/article/details/81100054
         $scope.date = {};
