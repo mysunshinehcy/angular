@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .tiny-SPA-head {
+            width: 100%;
+            height: 60px;
+            margin: 0px;
+            background: rgba(110, 175, 255, 0.92);
+        }
+
+        .tiny-SPA-head span {
+            display: inline-block;
+            cursor: pointer;
+            margin-right: 40px;
+            margin-left: 10px;
+            vertical-align: middle;
+            line-height: 60px;
+        }
+
+        .tiny-SPA-view {
+            margin: 10px;
+        }
+    </style>
+</head>
+
+<body style="margin: 0px">
+    <h2 class="tiny-SPA-head">
+        <span ui-sref="home">Home</span>
+        <span ui-sref="view1">模块一</span>
+        <span ui-sref="view2">模块二</span>
+        <span ui-sref="view3">模块三</span>
+        <span ui-sref="view4">模块四</span>
+        <span ui-sref="view5">模块五</span>
+    </h2>
+    <div class="tiny-SPA-view" ui-view></div>
+</body>
+
+<script src="loadScript.js"></script>
+<script src="../lib/angular.min.js"></script>
+<script src="../lib/angular-ui-router.min.js"></script>
+<script>
+    var myApp = angular.module("myApp", ["ui.router"]);
+
+    myApp.config(function ($stateProvider, $urlRouterProvider) {
+        $stateProvider.state("home", {
+            url: "/home",
+            template: "hello everyone! this is {{name}}!",
+            resolve: {
+                lazyloadController: lazyloadController("homeController.js")
+            },
+            controller: "homeController"
+        });
+        $stateProvider.state("view1", {
+            url: "/view1",
+            resolve: {
+                lazyloadController: lazyloadController("view1Controller.js")
+            },
+            controller: "view1Controller",
+            template: "hello everyone! this is {{name}}!"
+        });
+        $stateProvider.state("view2", {
+            url: "/view2",
+            resolve: {
+                lazyloadController: lazyloadController("view2Controller.js")
+            },
+            controller: "view2Controller",
+            template: "hello everyone! this is {{name}}!"
+        });
+        $stateProvider.state("view3", {
+            url: "/view3",
+            resolve: {
+                lazyloadController: lazyloadController("view3Controller.js")
+            },
+            controller: "view3Controller",
+            template: "hello everyone! this is {{name}}!"
+        });
+        $stateProvider.state("view4", {
+            url: "/view4",
+            resolve: {
+                lazyloadController: lazyloadController("view4Controller.js")
+            },
+            controller: "view4Controller",
+            template: "hello everyone! this is {{name}}!"
+        });
+        $stateProvider.state("view5", {
+            url: "/view5",
+            resolve: {
+                lazyloadController: lazyloadController("view5Controller.js")
+            },
+            controller: "view5Controller",
+            template: "hello everyone! this is {{name}}!"
+        });
+
+        function lazyloadController(controllerUrl) {
+            return function ($q) {
+                // $q创建一个deferred对象
+                var deferred = $q.defer();
+                loadScript(controllerUrl, function () {
+                    deferred.resolve();
+                });
+                // 返回promise对象
+                return deferred.promise;
+            };
+        }
+
+        // 下边是一个不使用$q服务的示例，运行后发现跳转状态时，会报错。
+        //        function lazyloadController(controllerUrl) {
+        //            return function(){
+        //                loadScript(controllerUrl, function(){
+        //                    console.log("loading");
+        //                });
+        //                return "aaa";
+        //            };
+        //        }
+    });
+
+    myApp.config(function ($controllerProvider) {
+        myApp.lazyRegisterController = $controllerProvider.register;
+    })
+</script>
+
+</html>
