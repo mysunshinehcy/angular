@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="myApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../lib/angular.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="../css/foundation.min.css" />
+</head>
+
+<body>
+    <div ng-controller="listCtrl">
+        <kid flavor="logchore(t)"></kid>
+    </div>
+    <script type="text/javascript">
+        var myApp = angular.module('myApp', []);
+        myApp.controller('listCtrl', function ($scope) {
+            $scope.logchore = function (x) {
+                alert(x);
+            };
+        });
+        myApp.directive('kid', function () {
+            return {
+                'restrict': 'E',
+                replace: true,
+                scope: {
+                    flavor: "&"
+                },
+                template: '<div > <input type="text" ng-model="v" /> <button ng-click="flavor({t:v})">click me</button></div>'
+            }
+        });
+    </script>
+</body>
+
+</html>
