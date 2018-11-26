@@ -18,3 +18,11 @@
         }
     ]
 }
+
+// F8: 继续执行
+// F10: step over, 单步执行, 不进入函数
+// F11: step into, 单步执行, 进入函数
+// shift + F11: step out, 跳出函数
+// ctrl + o: 打开文件
+// ctrl + shit + o: 跳到函数定义位置
+// ctrl + shift + f: 所有脚本中搜索
